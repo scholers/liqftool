@@ -105,7 +105,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.jolbox</groupId>
-			<artifactId>bonecp-parent</artifactId>
+			<artifactId>bonecp</artifactId>
 		</dependency>
 		<dependency>
     <groupId>asm</groupId>
@@ -117,7 +117,7 @@
 </dependency>
 <dependency>
     <groupId>org.apache.mina</groupId>
-    <artifactId>mina-parent</artifactId>
+    <artifactId>mina-core</artifactId>
 </dependency>
 <dependency>
     <groupId>cglib</groupId>
