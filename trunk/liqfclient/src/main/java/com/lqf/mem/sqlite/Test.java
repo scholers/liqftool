@@ -121,7 +121,7 @@ public class Test {
 		{
 			String sql = "delete FROM test where ID = " + i;
 			PreparedStatement pstmt = conn.prepareStatement(sql); 
-			System.out.println("IIII========" + i);
+			
 			pstmt.executeUpdate();
 
 			if (i % 1000000 == 0)
