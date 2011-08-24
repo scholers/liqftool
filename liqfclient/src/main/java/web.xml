@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" >
+	<display-name>FBCBCServer</display-name>
+  <session-config>
+    <session-timeout>10</session-timeout>
+  </session-config>  	 
+  <filter>
+  	<filter-name>sitemesh</filter-name>
+  	<filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
+  </filter>	
+  <filter-mapping>
+  	<filter-name>sitemesh</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<servlet>
+		<servlet-name>dispatcher</servlet-name>
+		<servlet-class>com.cmb.firmbank.webframe.servlet.ServletDispatcher</servlet-class>
+	</servlet>  
+  
+  <servlet>
+    <servlet-name>FBCBCServer</servlet-name>
+    <servlet-class>com.cmb.fbcbcserver.Scheduler</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+	<servlet>
+		<display-name>ServerRouteServlet</display-name>
+		<servlet-name>ServerRouteServlet</servlet-name>
+		<servlet-class>com.cmb.firmbank.baseFrame.ServerRouteServlet</servlet-class>
+	</servlet>  
+
+  <servlet> 
+    <servlet-name>dwr-invoker</servlet-name> 
+    <servlet-class>uk.ltd.getahead.dwr.DWRServlet</servlet-class> 
+  </servlet>  
+	<servlet-mapping>
+		<servlet-name>dispatcher</servlet-name>
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FBCBCServer</servlet-name>
+    <url-pattern>/Scheduler</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+		<servlet-name>ServerRouteServlet</servlet-name>
+		<url-pattern>/ServerRouteServlet</url-pattern>
+	</servlet-mapping>  
+  
+  <servlet-mapping> 
+    <servlet-name>dwr-invoker</servlet-name> 
+    <url-pattern>/dwr/*</url-pattern> 
+  </servlet-mapping>    
+  
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	  
+  <jsp-config>  
+	<taglib>
+  		<taglib-uri>sitemesh-decorator</taglib-uri>
+  		<taglib-location>/WEB-INF/tlds/sitemesh-decorator.tld</taglib-location>
+	</taglib>
+
+	<taglib>
+  		<taglib-uri>sitemesh-page</taglib-uri>
+  		<taglib-location>/WEB-INF/tlds/sitemesh-page.tld</taglib-location>
+    </taglib>  
+  </jsp-config>
+</web-app>
