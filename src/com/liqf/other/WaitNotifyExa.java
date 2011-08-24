@@ -1,6 +1,10 @@
 package com.liqf.other;
 
-
+/**
+ * 
+ * @author jill
+ *
+ */
 public class WaitNotifyExa {
     public WaitNotifyExa(){};
 	public void waitNotifyExa() throws InterruptedException {
