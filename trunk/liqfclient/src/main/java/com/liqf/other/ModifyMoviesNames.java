@@ -70,11 +70,22 @@ public class ModifyMoviesNames {
 		int count = FileAccess.Move(strFilePath, targetPath);
 		System.out.println("成功转移文件数:" + count);
 	}
+	
+	/**
+	 * 
+	 * @param strFilePath 上一级目录
+	 * @param targetPath
+	 */
+	public static void movePics(String strFilePath, String defaultPath, int maxCon) {
+		FileAccess.batchMove(strFilePath, defaultPath, 1000);
+		
+	}
 
 	public static void main(String args[]) {
 		//readFile("F:\\movies");
 		//movePics("C:\\TDDownload\\other\\others","E:\\My Documents\\My Webs\\sex\\pic18");
-		movePics("E:\\My Documents\\My Webs\\sex\\pic18","E:\\My Documents\\My Webs\\sex\\pic17");
+		//movePics("E:\\My Documents\\My Webs\\sex\\pic18","E:\\My Documents\\My Webs\\sex\\pic17");
+		movePics("E:\\My Documents\\My Webs\\sex","E:\\My Documents\\My Webs\\sex\\pic18", 1000);
 	}
 
 }
