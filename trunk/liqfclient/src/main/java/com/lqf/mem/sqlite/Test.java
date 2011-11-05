@@ -20,12 +20,12 @@ public class Test {
 			Statement stat = conn.createStatement();
 			
 			//update(conn);
-			//create(stat);
+			create(stat);
 			
 			//select(stat);
 			//insert(stat);
 			
-			delete(conn);
+			//delete(conn);
 			
 			conn.close();
 			
