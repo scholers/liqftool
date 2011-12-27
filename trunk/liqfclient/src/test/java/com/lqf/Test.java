@@ -1,5 +1,7 @@
 package com.lqf;
 
+import java.util.Date;
+
 /**
  * 
 *
@@ -21,18 +23,34 @@ public class Test {
 	        };  
 	        //      t.start();  
 	        return obj;  
-	    }  
+	    } 
+	    
+	    public boolean compreTime() {  
+	    	boolean isTrue = false;
+	  	  Date date = new Date();
+	  	long now = System.currentTimeMillis();
+	  	  long lCahceTime = 1;
+	  	long tiem = date.getTime();
+	  	
+	  	long setatTime = 1323235200027L;
+	  	long h = tiem- setatTime;
+	  	System.out.println(h / (60 * 60 * 1000));
+	  	long lCaTime = lCahceTime * 60 * 60 * 1000;
+	  	System.out.println(setatTime);
+	  	System.out.println(lCaTime);
+	  	System.out.println(setatTime +  lCaTime);
+	  	System.out.println(tiem);
+	  	System.out.println(now);
+	  	if (tiem - setatTime>= lCaTime) {
+	  		isTrue = true;
+	  	}
+	  	return isTrue;
+	    } 
 	  
 	  
 	    public static void main(String[] args) throws InterruptedException {  
 	        Test t = new Test();  
-	        t.doSomething(new BigObj("BigObj1"));  
-	        System.out.println("===== 1");  
-	        System.gc();  
-	        Object obj = t.doSomething(new BigObj("BigObj2")); // keep reference    
-	        System.out.println("===== 2");  
-	        System.gc();  
-	        Thread.sleep(1000);  
+	      System.out.println( t.compreTime());
 	  
 	    }  
 	  
