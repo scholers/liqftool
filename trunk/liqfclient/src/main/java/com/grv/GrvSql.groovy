@@ -1,4 +1,4 @@
-@Typed package com.grv
+package com.grv
 
 
 sql = Sql.newInstance( 'jdbc:jtds:sqlserver://serverName/dbName-CLASS;domain=domainName', 'username',
