@@ -2,6 +2,7 @@ package com.thread;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -16,18 +17,18 @@ public class WatchThread {
 	 * @throws InterruptedException
 	 */
 	public void testThread() throws InterruptedException {
-		int threadNum = 10;
+		int threadNum = 1000;
 		//初始化countDown
 		CountDownLatch threadSignal = new CountDownLatch(threadNum);
 		//创建固定长度的线程池
-		Executor executor = Executors.newFixedThreadPool(threadNum);
+		ExecutorService executor = Executors.newFixedThreadPool(threadNum);
 		for (int i = 0; i < threadNum; i++) { //开threadNum个线程   
 			Runnable task = new TestThread(threadSignal);
-			if(threadNum == 9){
+			if(threadNum == 999){
 				task.wait(10000);
 			}
 			executor.execute(task);
-			if(threadNum == 9){
+			if(threadNum == 999){
 				task.notify();
 			}
 			
@@ -35,6 +36,8 @@ public class WatchThread {
 		threadSignal.await(); //等待所有子线程执行完   
 		//do work
 		System.out.println(Thread.currentThread().getName() + "+++++++结束.");
+		//finish thread
+		executor.shutdown();
 	}
 
 	/**  
