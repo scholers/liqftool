@@ -20,10 +20,10 @@ public class CreateTable {
 	/**
 	 * 读取表格
 	 */
-	public static void readWord() {
+	public static void readWord(String filePath) {
 
 		try {
-			FileInputStream in = new FileInputStream("E:\\test.doc");//载入文档   
+			FileInputStream in = new FileInputStream(filePath);//载入文档   
 			POIFSFileSystem pfs = new POIFSFileSystem(in);
 			HWPFDocument hwpf = new HWPFDocument(pfs);
 			Range range = hwpf.getRange();//得到文档的读取范围   
@@ -62,6 +62,7 @@ public class CreateTable {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		readWord();
+		String filePath = "D:\\myword\\KPI\\FindBugs规则整理_中文版.doc";
+		readWord(filePath);
 	}
 }
