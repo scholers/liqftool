@@ -41,7 +41,7 @@ public class ReplaceKey {
 			oldReplaceStr.append(tempLine); 
 			while (tempLine != null) { 
 				tempLine = br.readLine(); 
-				oldReplaceStr.append(tempLine); 
+				oldReplaceStr.append(tempLine + "\n"); 
 			} 
 			br.close(); 
 			fr.close();  
@@ -61,8 +61,9 @@ public class ReplaceKey {
 				//Æ¥ÅäÉÏÁË£¬¾ÍÌæ»»
 				if(sourceTemp.getKey().indexOf(temp.getKey()) >= 0) {
 					String tempStr = temp.getValue() + "<p>" + sourceTemp.getValue() + "</p>";
+					//System.out.println("tempStr==" + tempStr);
 					//Ö´ÐÐÌæ»»²Ù×÷
-					replaceLongStr(strTemp, temp.getValue(), tempStr);
+					strTemp = replaceLongStr(strTemp, temp.getValue(), tempStr);
 				}
 			}
 			
@@ -89,10 +90,13 @@ public class ReplaceKey {
 	public static String replaceLongStr(String str, String fromStr, String toStr) {
 	    StringBuffer result = new StringBuffer();
 	    if (str != null && !str.equals("")) {
-	      while (str.indexOf(fromStr) > 0) {
+	    	//System.out.println("fromStr==" + fromStr);
+	      while (str.indexOf(fromStr) >= 0) {
+	    	//  System.out.println("str==" + str);
 	        result.append(str.substring(0, str.indexOf(fromStr)));
 	        result.append(toStr);
 	        str = str.substring(str.indexOf(fromStr)+fromStr.length(), str.length());
+	        
 	      }
 	      result.append(str);
 	    }
