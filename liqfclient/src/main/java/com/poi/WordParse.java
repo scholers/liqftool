@@ -18,14 +18,18 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  * @author weique.lqf
  *
  */
-public class WordParse {
+public class WordParse implements CommParseInerface {
 
 	//private static Map<String, String> keyMap = new HashMap<String, String>();
-
+	private String filePath = null;
+	
+	public WordParse(String filePath) {
+		this.filePath = filePath;
+	}
 	/**
 	 * 读取表格
 	 */
-	public static Map<String, String> readWord(String filePath) {
+	public  Map<String, String> parseDate() {
 		Map<String, String> keyMap = new HashMap<String, String>();
 		try {
 			FileInputStream in = new FileInputStream(filePath);// 载入文档
@@ -78,7 +82,7 @@ public class WordParse {
 	 *            输入的内容
 	 * @return
 	 */
-	public static int judgeChina(String content) {
+	public  int judgeChina(String content) {
 		// Integer index = 0;
 
 		// StringBuffer sBuffer = new StringBuffer();
@@ -112,7 +116,7 @@ public class WordParse {
 	public static void main(String[] args) {
 		String filePath = "D:\\myword\\KPI\\FindBugs规则整理_中文版.doc";
 		// System.out.println(judgeChina(filePath));
-		readWord(filePath);
+		//readWord(filePath);
 		//printAllValues();
 	}
 }
