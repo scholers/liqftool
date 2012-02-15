@@ -7,8 +7,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.jdom.JDOMException;
+import org.junit.Test;
+
+
 
 /**
  * 翻译比对
@@ -21,8 +27,8 @@ public class ReplaceKey {
 		//中文解释
 		//String filePath = "D:\\myword\\KPI\\FindBugs规则整理_中文版.doc";
 		// System.out.println(judgeChina(filePath));
-		WordParse.readWord(filePath);
-		Map<String, String> sourceKey = WordParse.getKeyMap();
+		//WordParse.readWord(filePath);
+		Map<String, String> sourceKey = WordParse.readWord(filePath);
 		
 		//英文原版
 		//String filePath2 = "D:\\myword\\KPI\\messages.xml";
@@ -85,11 +91,12 @@ public class ReplaceKey {
 
 	}
 	
+	
 	//并发
 	public static void replaceAllKeyCur(String filePath, String targetFilePath, String writeFilePath) {
 		//中文解释
 		WordParse.readWord(filePath);
-		Map<String, String> sourceKey = WordParse.getKeyMap();
+		Map<String, String> sourceKey = WordParse.readWord(filePath);
 		
 		//英文原版
 		Map<String, String> tempMap = new HashMap<String, String>();
@@ -149,6 +156,67 @@ public class ReplaceKey {
 			e.printStackTrace(); 
 		} 
 
+	}
+	
+	/**
+	 * 测试函数
+	 * 
+	 * @throws InterruptedException
+	 */
+	@Test
+	public void testThread() throws InterruptedException {
+		
+		//初始化countDown
+		CountDownLatch threadSignal = new CountDownLatch(2);
+		long startTime = System.currentTimeMillis();
+		//创建固定长度的线程池
+		ExecutorService executor = Executors.newFixedThreadPool(2);
+		for (int i = 0; i < 2; i++) { //开threadNum个任务线程   
+			Runnable task = new InnerThread(threadSignal, false);
+			executor.execute(task);
+		}
+		threadSignal.await(); //等待所有子线程执行完   
+		//do work
+		System.out.println(Thread.currentThread().getName() + "+++++++结束.");
+
+		//finish thread
+		executor.shutdown();
+		long endTime = System.currentTimeMillis();
+		System.out.println("总共耗时：" + (endTime - startTime));
+	}
+	
+
+	/**
+	 * 
+	 * @author jill
+	 *
+	 */
+	private class InnerThread implements Runnable {
+		private CountDownLatch threadsSignal;
+		private boolean isCached = false;
+
+		public InnerThread(CountDownLatch threadsSignal, boolean isCached) {
+			this.threadsSignal = threadsSignal;
+			this.isCached = isCached;
+		}
+
+		public void run() {
+			System.out.println(Thread.currentThread().getName() + "开始...");
+			//do shomething
+			//long time1 = gryExecutor.testExecute(isCached, scriptName);
+			// 清理脚本
+			//gryExecutor.clearScripts();
+			//System.out.println("消耗时间：" + time1);
+			
+			long thredCount = threadsSignal.getCount();
+			System.out.println("开始了线程：：：：" + thredCount);
+			
+			//TestSecrity.getInstance().printTest();
+			//线程结束时计数器减1
+			threadsSignal.countDown();  
+			System.out.println(Thread.currentThread().getName() + "结束. 还有"
+					+ threadsSignal.getCount() + " 个线程");
+		}
 	}
 	
 	/**

@@ -20,13 +20,13 @@ import org.apache.poi.poifs.filesystem.POIFSFileSystem;
  */
 public class WordParse {
 
-	private static Map<String, String> keyMap = new HashMap<String, String>();
+	//private static Map<String, String> keyMap = new HashMap<String, String>();
 
 	/**
 	 * 读取表格
 	 */
-	public static void readWord(String filePath) {
-
+	public static Map<String, String> readWord(String filePath) {
+		Map<String, String> keyMap = new HashMap<String, String>();
 		try {
 			FileInputStream in = new FileInputStream(filePath);// 载入文档
 			POIFSFileSystem pfs = new POIFSFileSystem(in);
@@ -68,6 +68,7 @@ public class WordParse {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return keyMap;
 	}// end method
 
 	/**
@@ -94,7 +95,7 @@ public class WordParse {
 		return -1;
 	}
 
-	private static void printAllValues() {
+/*	private static void printAllValues() {
 		for (Map.Entry<String, String> temp : keyMap.entrySet()) {
 			System.out.println(temp.getKey() + "===" + temp.getValue());
 		}
@@ -103,7 +104,7 @@ public class WordParse {
 	
 	public static Map<String, String> getKeyMap() {
 		return keyMap;
-	}
+	}*/
 
 	/**
 	 * @param args
@@ -112,6 +113,6 @@ public class WordParse {
 		String filePath = "D:\\myword\\KPI\\FindBugs规则整理_中文版.doc";
 		// System.out.println(judgeChina(filePath));
 		readWord(filePath);
-		printAllValues();
+		//printAllValues();
 	}
 }
