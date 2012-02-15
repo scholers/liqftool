@@ -85,6 +85,72 @@ public class ReplaceKey {
 
 	}
 	
+	//并发
+	public static void replaceAllKeyCur(String filePath, String targetFilePath, String writeFilePath) {
+		//中文解释
+		WordParse.readWord(filePath);
+		Map<String, String> sourceKey = WordParse.getKeyMap();
+		
+		//英文原版
+		Map<String, String> tempMap = new HashMap<String, String>();
+		try {
+			tempMap = XmlParse.buildRichPage(XmlParse.buildDocument(targetFilePath));
+		} catch (JDOMException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		StringBuilder oldReplaceStr = new StringBuilder();
+		FileReader fr;
+		try {
+			fr = new FileReader(targetFilePath);
+			BufferedReader br = new BufferedReader(fr); 
+			String tempLine = br.readLine();
+			oldReplaceStr.append(tempLine); 
+			while (tempLine != null) { 
+				tempLine = br.readLine(); 
+				oldReplaceStr.append(tempLine + "\n"); 
+			} 
+			br.close(); 
+			fr.close();  
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		
+		String strTemp = oldReplaceStr.toString();
+		//关键词匹配
+		for(Map.Entry<String, String> temp : tempMap.entrySet()) {
+			for(Map.Entry<String, String> sourceTemp : sourceKey.entrySet()) {
+				//匹配上了，就替换
+				if(sourceTemp.getKey().indexOf(temp.getKey()) >= 0) {
+					String tempStr = temp.getValue() + "<p>" + sourceTemp.getValue() + "</p>";
+					//System.out.println("tempStr==" + tempStr);
+					//执行替换操作
+					strTemp = replaceLongStr(strTemp, temp.getValue(), tempStr);
+				}
+			}
+			
+		}
+		//输出新的xml文件
+		try { 
+			FileWriter fw = new FileWriter(writeFilePath); 
+			fw.write(strTemp); 
+			fw.flush(); 
+			fw.close();  
+		} catch (IOException e) { 
+			e.printStackTrace(); 
+		} 
+
+	}
+	
 	/**
 	 * 文本替换
 	 * @param str
