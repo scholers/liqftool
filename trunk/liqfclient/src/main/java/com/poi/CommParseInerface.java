@@ -1,6 +1,13 @@
 package com.poi;
 
+import java.util.Map;
+
+/**
+ * 
+ * @author jill
+ *
+ */
 public interface CommParseInerface {
 
-	void parseDate();
+	Map<String, String> parseDate();
 }
