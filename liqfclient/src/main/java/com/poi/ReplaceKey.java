@@ -10,20 +10,25 @@ import java.util.Map;
 
 import org.jdom.JDOMException;
 
+/**
+ * 翻译比对
+ * @author weique.lqf
+ *
+ */
 public class ReplaceKey {
 	
-	public static void replaceAllKey() {
+	public static void replaceAllKey(String filePath, String targetFilePath, String writeFilePath) {
 		//中文解释
-		String filePath = "D:\\myword\\KPI\\FindBugs规则整理_中文版.doc";
+		//String filePath = "D:\\myword\\KPI\\FindBugs规则整理_中文版.doc";
 		// System.out.println(judgeChina(filePath));
-		CreateTable.readWord(filePath);
-		Map<String, String> sourceKey = CreateTable.getKeyMap();
+		WordParse.readWord(filePath);
+		Map<String, String> sourceKey = WordParse.getKeyMap();
 		
 		//英文原版
-		String filePath2 = "D:\\myword\\KPI\\messages.xml";
+		//String filePath2 = "D:\\myword\\KPI\\messages.xml";
 		Map<String, String> tempMap = new HashMap<String, String>();
 		try {
-			tempMap = XmlParse.buildRichPage(XmlParse.buildDocument(filePath2));
+			tempMap = XmlParse.buildRichPage(XmlParse.buildDocument(targetFilePath));
 		} catch (JDOMException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -35,7 +40,7 @@ public class ReplaceKey {
 		StringBuilder oldReplaceStr = new StringBuilder();
 		FileReader fr;
 		try {
-			fr = new FileReader(filePath2);
+			fr = new FileReader(targetFilePath);
 			BufferedReader br = new BufferedReader(fr); 
 			String tempLine = br.readLine();
 			oldReplaceStr.append(tempLine); 
@@ -70,7 +75,7 @@ public class ReplaceKey {
 		}
 		//输出新的xml文件
 		try { 
-			FileWriter fw = new FileWriter("D:\\myword\\KPI\\messages2.xml"); 
+			FileWriter fw = new FileWriter(writeFilePath); 
 			fw.write(strTemp); 
 			fw.flush(); 
 			fw.close();  
@@ -108,6 +113,9 @@ public class ReplaceKey {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		replaceAllKey();
+		String filePath = "D:\\myword\\KPI\\FindBugs规则整理_中文版.doc";
+		String targetFilePath = "D:\\myword\\KPI\\messages.xml";
+		String writeFilePath = "D:\\myword\\KPI\\messages2.xml";
+		replaceAllKey(filePath, targetFilePath, writeFilePath);
 	}
 }
