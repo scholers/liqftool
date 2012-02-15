@@ -57,7 +57,7 @@ public class XmlParse {
 				Element elments = insertModuleElement.getChild("Details");
 				String details = elments.getText();
 				if(details != null) {
-					xmlMap.put(key, details);
+					xmlMap.put(key.trim(), details.trim());
 				}
 			}
 		}
