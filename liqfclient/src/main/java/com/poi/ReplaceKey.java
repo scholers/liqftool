@@ -6,17 +6,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-import org.jdom.JDOMException;
 import org.junit.Test;
 
 /**
@@ -27,15 +24,15 @@ import org.junit.Test;
  */
 public class ReplaceKey {
 
-	public static void replaceAllKey(String filePath, String targetFilePath,
+	public  void replaceAllKey(String filePath, String targetFilePath,
 			String writeFilePath) {
 		// 中文解释
+		CommParseInerface xmlSource = new XmlParse(targetFilePath);
+		CommParseInerface wordSource = new WordParse(filePath);
 		// 中文解释
-		CommParseInerface temp1 = new XmlParse(targetFilePath);
-		CommParseInerface temp2 = new WordParse(filePath);
-		Map<String, String> sourceKey = temp1.parseDate();
+		Map<String, String> sourceKey = wordSource.parseDate();
 		// 英文原版
-		Map<String, String> tempMap = temp2.parseDate();
+		Map<String, String> tempMap = xmlSource.parseDate();
 
 		StringBuilder oldReplaceStr = new StringBuilder();
 		FileReader fr;
@@ -67,7 +64,6 @@ public class ReplaceKey {
 				if (sourceTemp.getKey().indexOf(temp.getKey()) >= 0) {
 					String tempStr = temp.getValue() + "<p>"
 							+ sourceTemp.getValue() + "</p>";
-					// System.out.println("tempStr==" + tempStr);
 					// 执行替换操作
 					strTemp = replaceLongStr(strTemp, temp.getValue(), tempStr);
 				}
@@ -87,7 +83,7 @@ public class ReplaceKey {
 	}
 
 	// 并发
-	public static void replaceAllKeyCur(String filePath, String targetFilePath,
+	public  void replaceAllKeyCur(String filePath, String targetFilePath,
 			String writeFilePath) {
 		// 中文解释
 		CommParseInerface temp1 = new XmlParse(targetFilePath);
@@ -151,18 +147,11 @@ public class ReplaceKey {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testThread() throws InterruptedException {
-		String filePath = "C:\\快盘\\work\\FindBugs\\FindBugs规则整理_中文版.doc";
-		String targetFilePath = "C:\\快盘\\work\\FindBugs\\messages.xml";
-		String writeFilePath = "C:\\快盘\\work\\FindBugs\\messages2.xml";
-		// 初始化countDown
-		// CountDownLatch threadSignal = new CountDownLatch(2);
-		long startTime = System.currentTimeMillis();
-
-		// 创建固定长度的线程池
-		ExecutorService executor = Executors.newFixedThreadPool(2);
-		CommParseInerface temp1 = new XmlParse(targetFilePath);
-		CommParseInerface temp2 = new WordParse(filePath);
+	public void mutiThreadRaplace(String filePath, String targetFilePath,
+			String writeFilePath) throws InterruptedException {
+		
+		CommParseInerface temp1 = new WordParse(filePath);
+		CommParseInerface temp2 = new XmlParse(targetFilePath);
 
 		List<FutureTask<Map<String, String>>> list = new ArrayList<FutureTask<Map<String, String>>>();
 		// 创建线程池，线程池的大小和List.size没有啥必然的关系，一般的原则是<=list.size,多出来浪费不好
@@ -231,12 +220,10 @@ public class ReplaceKey {
 				if (sourceTemp.getKey().indexOf(temp.getKey()) >= 0) {
 					String tempStr = temp.getValue() + "<p>"
 							+ sourceTemp.getValue() + "</p>";
-					// System.out.println("tempStr==" + tempStr);
 					// 执行替换操作
 					strTemp = replaceLongStr(strTemp, temp.getValue(), tempStr);
 				}
 			}
-
 		}
 		// 输出新的xml文件
 		try {
@@ -251,7 +238,7 @@ public class ReplaceKey {
 	}
 
 	/**
-	 * 这个类很简单，就是统计下简单的加法（从1 到total)
+	 * 分布计算
 	 * 
 	 * @author Administrator
 	 * 
@@ -280,19 +267,20 @@ public class ReplaceKey {
 	 * @param toStr
 	 * @return
 	 */
-	public static String replaceLongStr(String str, String fromStr, String toStr) {
+	private String replaceLongStr(String str, String fromStr, String toStr) {
 		StringBuilder result = new StringBuilder();
 		if (str != null && !str.equals("")) {
-			// System.out.println("fromStr==" + fromStr);
-			while (str.indexOf(fromStr) >= 0) {
-				// System.out.println("str==" + str);
+			if (str.indexOf(fromStr) >= 0) {
 				result.append(str.substring(0, str.indexOf(fromStr)));
-				result.append(toStr);
-				str = str.substring(str.indexOf(fromStr) + fromStr.length(),
+				//追加中英文的解析
+				result.append(toStr.trim());
+				String tempEndStr = str.substring(str.indexOf(fromStr) + fromStr.length(),
 						str.length());
-
+				if(tempEndStr != null && !tempEndStr.equals("")) {
+					result.append(tempEndStr);
+				}
 			}
-			result.append(str);
+			
 		}
 		return result.toString();
 	}
@@ -302,12 +290,12 @@ public class ReplaceKey {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		String filePath = "C:\\快盘\\work\\FindBugs\\FindBugs规则整理_中文版.doc";
-		String targetFilePath = "C:\\快盘\\work\\FindBugs\\messages.xml";
-		String writeFilePath = "C:\\快盘\\work\\FindBugs\\messages2.xml";
+		String filePath = "d:\\快盘\\work\\FindBugs\\FindBugs规则整理_中文版.doc";
+		String targetFilePath = "d:\\快盘\\work\\FindBugs\\messages.xml";
+		String writeFilePath = "d:\\快盘\\work\\FindBugs\\messages2.xml";
 		// replaceAllKey(filePath, targetFilePath, writeFilePath);
 		ReplaceKey replaceKey = new ReplaceKey();
-		//replaceKey.testThread();
-		replaceKey.replaceAllKey(filePath, targetFilePath, writeFilePath);
+		replaceKey.mutiThreadRaplace(filePath, targetFilePath, writeFilePath);
+		//replaceKey.replaceAllKey(filePath, targetFilePath, writeFilePath);
 	}
 }
