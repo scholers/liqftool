@@ -233,6 +233,10 @@ public class MainWin extends JFrame implements ActionListener, MouseListener {
         // TODO Auto-generated method stub
 
     }
+    
+    public static void main(String[] args) {
+    	MainWin qqFriendlist = new MainWin("pic");
+    	 }
 }
 
 

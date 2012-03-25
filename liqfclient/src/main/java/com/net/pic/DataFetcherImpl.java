@@ -11,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.net.pic.ui.HttpClientUrl;
+
 public class DataFetcherImpl implements DataFetcher {
 
     public File fecthFile(String httpUrl, String fileSavePath)
@@ -46,6 +48,7 @@ public class DataFetcherImpl implements DataFetcher {
 
         StringBuffer data = new StringBuffer();
 
+        /*
         String currentLine;
 
         // 打开输入流
@@ -56,8 +59,9 @@ public class DataFetcherImpl implements DataFetcher {
         while ((currentLine = reader.readLine()) != null) {
             data.append(currentLine);
         }
-        reader.close();
-
+        reader.close();*/
+        HttpClientUrl clintUrl = new HttpClientUrl(httpUrl);
+        data.append(clintUrl.parseHtml());
         return data;
     }
 
