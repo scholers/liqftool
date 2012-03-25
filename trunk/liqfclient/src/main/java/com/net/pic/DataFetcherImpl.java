@@ -43,22 +43,8 @@ public class DataFetcherImpl implements DataFetcher {
 
     public StringBuffer fetchHtml(String httpUrl, HttpClientUrl clintUrl) throws MalformedURLException,
             IOException {
-
         StringBuffer data = new StringBuffer();
         clintUrl.setUrl(httpUrl);
-        /*
-        String currentLine;
-
-        // 打开输入流
-        BufferedReader reader = new BufferedReader(new InputStreamReader(
-                getInputStream(httpUrl), "GBK"));
-
-        // 读取数据
-        while ((currentLine = reader.readLine()) != null) {
-            data.append(currentLine);
-        }
-        reader.close();*/
-        //
         data.append(clintUrl.parseHtml());
         return data;
     }
