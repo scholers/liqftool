@@ -11,7 +11,7 @@ import org.jsoup.select.Elements;
 
 import com.net.pic.util.RegexUtil;
 
-public class DataHandlerImpl implements DataHandler {
+public class UrlHandlerImpl implements DataHandler {
 
     public List<String> getImageUrls(StringBuffer html) {
 
@@ -31,7 +31,7 @@ public class DataHandlerImpl implements DataHandler {
                 result.add(r);
             }
         }
-        System.out.println("result==" + result);
+        
         return result;
     }
 
@@ -49,7 +49,7 @@ public class DataHandlerImpl implements DataHandler {
         for (Iterator<Element> i = es.iterator(); i.hasNext();) {
             Element e = i.next();
             String r = e.attr("href");
-            if (RegexUtil.validateSting(r, "[a-zA-z]+://[^//s]*")) {
+            if (RegexUtil.validateSting(r,  "thread.*.html")) {
                 result.add(r);
             }
         }
@@ -58,4 +58,5 @@ public class DataHandlerImpl implements DataHandler {
     }
 
 }
+
 

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import com.net.pic.ui.HttpClientUrl;
+
 public interface DataFetcher {
 	 /**
      * 抓取网页
@@ -13,7 +15,7 @@ public interface DataFetcher {
      * @throws IOException 
      * @throws MalformedURLException 
      */
-    public StringBuffer fetchHtml(String httpUrl) throws MalformedURLException, IOException;
+    public StringBuffer fetchHtml(String httpUrl, HttpClientUrl clintUrl) throws MalformedURLException, IOException;
     
     /**
      * 抓取文件

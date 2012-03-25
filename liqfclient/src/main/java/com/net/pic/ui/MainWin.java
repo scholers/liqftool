@@ -33,6 +33,10 @@ import javax.swing.ScrollPaneLayout;
 
 import com.net.pic.Controller;
 import com.net.pic.ControllerImpl;
+import com.net.pic.DataFetcher;
+import com.net.pic.DataFetcherImpl;
+import com.net.pic.DataHandler;
+import com.net.pic.UrlHandlerImpl;
 
 
 
@@ -185,6 +189,8 @@ public class MainWin extends JFrame implements ActionListener, MouseListener {
                 this.update(getGraphics());
                 try {
                     Controller controller = new ControllerImpl(this);
+                   
+                    //¶þ¼¶½âÎö
                     List<File> fileList = controller.fetchImages(urlFiled
                             .getText(), imgFiled.getText());
 

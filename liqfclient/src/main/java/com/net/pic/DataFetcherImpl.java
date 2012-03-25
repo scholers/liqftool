@@ -1,12 +1,10 @@
 package com.net.pic;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -43,11 +41,11 @@ public class DataFetcherImpl implements DataFetcher {
     }
 
 
-    public StringBuffer fetchHtml(String httpUrl) throws MalformedURLException,
+    public StringBuffer fetchHtml(String httpUrl, HttpClientUrl clintUrl) throws MalformedURLException,
             IOException {
 
         StringBuffer data = new StringBuffer();
-
+        clintUrl.setUrl(httpUrl);
         /*
         String currentLine;
 
@@ -60,7 +58,7 @@ public class DataFetcherImpl implements DataFetcher {
             data.append(currentLine);
         }
         reader.close();*/
-        HttpClientUrl clintUrl = new HttpClientUrl(httpUrl);
+        //
         data.append(clintUrl.parseHtml());
         return data;
     }

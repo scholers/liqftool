@@ -11,6 +11,8 @@ import java.net.URL;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
+import javax.swing.JTextArea;
+
 /**
  * \
  * 
@@ -22,8 +24,10 @@ public class Downloader extends Thread {
 	private CyclicBarrier cb;
 	private String urlStr;
 	private String saveFileName;
+	private JTextArea messageArea;
 
-	private static final String FILE_PATH = "C://pic//";
+	//private static final String FILE_PATH = "d://pic//";
+	private String filePath = "d://pic//";
 
 	public Downloader(String name, String url, String saveFileName,
 			CyclicBarrier cb) {
@@ -32,6 +36,16 @@ public class Downloader extends Thread {
 		this.urlStr = url;
 		this.saveFileName = saveFileName;
 	}
+	
+	public Downloader(String name, String url, String saveFileName,String filePath,
+			CyclicBarrier cb, JTextArea messageArea) {
+		this.setName(name);
+		this.cb = cb;
+		this.urlStr = url;
+		this.saveFileName = saveFileName;
+		this.filePath = filePath;
+		this.messageArea = messageArea;
+	}
 
 	@Override
 	public void run() {
@@ -39,8 +53,8 @@ public class Downloader extends Thread {
 			System.out.println("开始下载" + this.saveFileName + "...");
 			URL url = new URL(this.urlStr);
 			DataInputStream dis = new DataInputStream(url.openStream());
-			OutputStream fos = new FileOutputStream(new File(FILE_PATH
-					+ this.saveFileName));
+			OutputStream fos = new FileOutputStream(new File(filePath
+					+ "//" + this.saveFileName));
 			byte[] buff = new byte[1024];
 			int len = -1;
 			while ((len = dis.read(buff)) != -1) {
@@ -50,6 +64,12 @@ public class Downloader extends Thread {
 			fos.close();
 			dis.close();
 			System.out.println("下载文件" + this.saveFileName + "完成");
+			if(messageArea != null) {
+				messageArea.setText(
+	                    messageArea.getText() + "/n" + filePath + "//" 
+						+  this.saveFileName
+	                            + " 下载完成！");
+			}
 			this.cb.await();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

@@ -4,10 +4,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 import org.apache.commons.httpclient.Cookie;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 
 public class HttpClientUrl {
 	private String url = "http://www.xfjiayuan.com/thread-352084-1-1.html";
+	
+	// 先建立一个客户端实例，将模拟一个浏览器
+	private HttpClient client = new HttpClient();
+	private Cookie[] cookieArr = null;
 	/**
 	 * 8 * @param args 9 * @throws Exception 10
 	 */
@@ -17,23 +22,31 @@ public class HttpClientUrl {
 		
 		test.parseHtml();
 	}
-	private HttpClientUrl() {
-		
+	public HttpClientUrl() {
 	}
+	
 	public HttpClientUrl(String postUrl) {
 		this.url = postUrl;
 	}
 
-	public String parseHtml() {
-		// 先建立一个客户端实例，将模拟一个浏览器
-		org.apache.commons.httpclient.HttpClient client = new org.apache.commons.httpclient.HttpClient();
+	public String getUrl() {
+		return url;
+	}
 
-		Cookie[] cookieArr = null;
-		try {
-			cookieArr = login("scholerscn", "790521", client);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String parseHtml() {
+		
+		//not login
+		if(cookieArr == null) {
+			try {
+				cookieArr = login("scholerscn", "790521", client);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		String result = "";
 		// 获取cookie之后
