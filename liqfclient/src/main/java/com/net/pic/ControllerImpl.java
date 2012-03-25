@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 
 import javax.swing.JTextArea;
 
+import com.net.pic.task.TaskThread;
 import com.net.pic.ui.HttpClientUrl;
 import com.net.pic.ui.MainWin;
 import com.thread.TestSecrity;
@@ -50,11 +51,31 @@ public class ControllerImpl implements Controller {
         
         if(imgUrls.size() <= 0) {
         	List<String> urlStrs =  urlHander.getUrls(page);
-        	for(String tempUrl : urlStrs) {
+/*        	for(String tempUrl : urlStrs) {
         		
         		page = fetcher.fetchHtml(PRX_URL + tempUrl, clintUrl);
         		imgUrls.addAll(hander.getImageUrls(page));
-        	}
+        	}*/
+        	 int threadNum = urlStrs.size();
+     		//初始化countDown
+     		CountDownLatch threadSignal = new CountDownLatch(threadNum);
+           //创建固定长度的线程池
+           	ExecutorService executor = Executors.newFixedThreadPool(50);
+           	for(String tempUrl : urlStrs) { //开threadNum个线程   
+     			Runnable task = new TaskThread(PRX_URL + tempUrl, clintUrl,
+     					threadSignal, fetcher, hander, imgUrls);
+     			executor.execute(task);
+     		}
+           	try {
+     			threadSignal.await();
+     		} catch (InterruptedException e) {
+     			// TODO Auto-generated catch block
+     			e.printStackTrace();
+     		} //等待所有子线程执行完   
+     		//do work
+     		System.out.println(Thread.currentThread().getName() + "+++++++结束.");
+     		//finish thread
+     		//executor.shutdown();
         }
         System.out.println(imgUrls.toString());
         // 保存图片，返回文件列表
