@@ -26,12 +26,12 @@ public class DataHandlerImpl implements DataHandler {
         // 获取没一个img标签src的内容，也就是图片地址
         for (Iterator<Element> i = es.iterator(); i.hasNext();) {
             Element e = i.next();
-            String r = e.attr("src");
-            if (RegexUtil.validateSting(r, "http://.+//.(jpg|jpeg)")) {
+            String r = e.attr("file");
+            if (RegexUtil.validateSting(r, "http://.*.jpg")) {
                 result.add(r);
             }
         }
-
+        
         return result;
     }
 
