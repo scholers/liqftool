@@ -83,6 +83,8 @@ public class ControllerImpl implements Controller {
         if(threadNum > 0) {
         	FileUtil.toFile(imgUrls, imgSaveDir, "fileList.txt");
         }
+        
+        threadNum = imgUrls.size();
 		//初始化countDown
 		CountDownLatch threadSignal = new CountDownLatch(threadNum);
       //创建固定长度的线程池
