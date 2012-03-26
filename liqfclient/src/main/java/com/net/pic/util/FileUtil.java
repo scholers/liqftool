@@ -1,12 +1,16 @@
 package com.net.pic.util;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.util.List;
 
 public class FileUtil {
 
@@ -23,6 +27,11 @@ public class FileUtil {
 		}
 		try {
 			DataInputStream dis = new DataInputStream(in);
+			 java.io.File myFilePath = new java.io.File(filePath);  
+		      if (!myFilePath.exists()) {  
+		        myFilePath.mkdir();  
+		      }  
+		      
 			OutputStream fos = new FileOutputStream(new File(filePath
 					+ fileName));
 			byte[] buff = new byte[1024];
@@ -40,4 +49,22 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	/**
+	 * 
+	 * @param fileList
+	 * @param filePath
+	 * @param fileName
+	 */
+	public static void toFile(List<String> fileList, String filePath, String fileName) {
+		StringBuilder strBuilder = new StringBuilder();
+		for(String fileUrl : fileList) {
+			strBuilder.append(fileUrl).append("\n");
+		}
+		InputStream in  = new   ByteArrayInputStream(strBuilder.toString().getBytes());
+		toFile(in, filePath, fileName);
+	}
+	
+	
 }
