@@ -13,6 +13,12 @@ public class HttpClientUrl {
 	// 先建立一个客户端实例，将模拟一个浏览器
 	private HttpClient client = new HttpClient();
 	private Cookie[] cookieArr = null;
+	public Cookie[] getCookieArr() {
+		return cookieArr;
+	}
+	public void setCookieArr(Cookie[] cookieArr) {
+		this.cookieArr = cookieArr;
+	}
 	/**
 	 * 8 * @param args 9 * @throws Exception 10
 	 */

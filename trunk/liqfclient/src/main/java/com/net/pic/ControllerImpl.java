@@ -62,7 +62,9 @@ public class ControllerImpl implements Controller {
            //创建固定长度的线程池
            	ExecutorService executor = Executors.newFixedThreadPool(50);
            	for(String tempUrl : urlStrs) { //开threadNum个线程   
-     			Runnable task = new TaskThread(PRX_URL + tempUrl, clintUrl,
+           		HttpClientUrl clintUrlTemp = new HttpClientUrl();
+           		clintUrlTemp.setCookieArr(clintUrl.getCookieArr());
+     			Runnable task = new TaskThread(PRX_URL + tempUrl, clintUrlTemp,
      					threadSignal, fetcher, hander, imgUrls);
      			executor.execute(task);
      		}
