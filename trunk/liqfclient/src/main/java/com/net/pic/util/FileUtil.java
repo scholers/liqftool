@@ -83,12 +83,7 @@ public class FileUtil {
 			fileList.clear();
 			fileList.addAll(tempFileList);
 		} 
-		/*
-		InputStream in = new ByteArrayInputStream(strBuilder.toString()
-				.getBytes());
-		toFile(in, filePath, fileName);*/
 		
-
 		FileWriter fw;
 		try {
 			fw = new FileWriter(filePath + fileName, isAppend);
