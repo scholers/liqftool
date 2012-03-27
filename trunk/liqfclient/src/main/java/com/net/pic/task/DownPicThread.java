@@ -11,6 +11,8 @@ import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JTextArea;
 
+import com.net.pic.util.FileUtil;
+
 public class DownPicThread implements Runnable {
 	private CountDownLatch threadsSignal;
 
@@ -52,15 +54,19 @@ public class DownPicThread implements Runnable {
 			System.out.println("开始下载" + this.saveFileName + "...");
 			URL url = new URL(this.urlStr);
 			DataInputStream dis = new DataInputStream(url.openStream());
+			/*
 			OutputStream fos = new FileOutputStream(new File(filePath
 					+ "//" + this.saveFileName));
+			
 			byte[] buff = new byte[1024];
 			int len = -1;
 			while ((len = dis.read(buff)) != -1) {
 				fos.write(buff, 0, len);
 			}
 			buff = null;
-			fos.close();
+			*/
+			FileUtil.toFile(dis, filePath, this.saveFileName);
+			
 			dis.close();
 			System.out.println("下载文件" + this.saveFileName + "完成");
 			if(messageArea != null) {
