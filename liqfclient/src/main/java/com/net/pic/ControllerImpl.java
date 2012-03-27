@@ -15,6 +15,7 @@ import com.net.pic.task.DownPicThread;
 import com.net.pic.task.TaskThread;
 import com.net.pic.ui.HttpClientUrl;
 import com.net.pic.ui.MainWin;
+import com.net.pic.util.FileBean;
 import com.net.pic.util.FileUtil;
 
 
@@ -77,22 +78,28 @@ public class ControllerImpl implements Controller {
         System.out.println(imgUrls.toString());
         // 保存图片，返回文件列表
         List<File> fileList = new ArrayList<File>();
+        List<FileBean> fileBeanList = new ArrayList<FileBean>();
+        for(String tempUrl : imgUrls) { //开threadNum个线程   
+        	FileBean fileBean = new FileBean();
+        	fileBean.setFileName(tempUrl);
+        	fileBeanList.add(fileBean);
+        }
        
-        int threadNum = imgUrls.size();
+        int threadNum = fileBeanList.size();
         //输出到文件
         if(threadNum > 0) {
-        	FileUtil.toFile(imgUrls, imgSaveDir, "fileList.txt");
+        	FileUtil.toFile(fileBeanList, imgSaveDir, "fileList.txt");
         }
         
-        threadNum = imgUrls.size();
+        threadNum = fileBeanList.size();
 		//初始化countDown
 		CountDownLatch threadSignal = new CountDownLatch(threadNum);
       //创建固定长度的线程池
       	ExecutorService executor = Executors.newFixedThreadPool(50);
       	int i = 0;
-      	for (String url : imgUrls) { //开threadNum个线程   
+      	for (FileBean fileBean : fileBeanList) { //开threadNum个线程   
       		String newFileName = System.currentTimeMillis() +"_00" + i +".jpg";
-			Runnable task = new DownPicThread(url, newFileName, imgSaveDir, threadSignal, messageArea);
+			Runnable task = new DownPicThread(fileBean.getFileName(), newFileName, imgSaveDir, threadSignal, messageArea);
 			executor.execute(task);
 			i ++;
 		}
