@@ -1,8 +1,8 @@
 package com.net.pic;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -13,9 +13,9 @@ import com.net.pic.util.RegexUtil;
 
 public class DataHandlerImpl implements DataHandler {
 
-    public List<String> getImageUrls(StringBuffer html) {
+    public Set<String> getImageUrls(StringBuffer html) {
 
-        List<String> result = new ArrayList<String>();
+    	Set<String> result = new HashSet<String>();
 
         // 将字符串解析为html文档
         Document doc = Jsoup.parse(html.toString());
@@ -28,7 +28,9 @@ public class DataHandlerImpl implements DataHandler {
             Element e = i.next();
             String r = e.attr("file");
             if (RegexUtil.validateSting(r, "http://.*.jpg")) {
-                result.add(r);
+            	if(!result.contains(r)) {
+            		result.add(r);
+            	}
             }
         }
         System.out.println("result==" + result);
@@ -36,8 +38,8 @@ public class DataHandlerImpl implements DataHandler {
     }
 
 
-    public List<String> getUrls(StringBuffer html) {
-        List<String> result = new ArrayList<String>();
+    public Set<String> getUrls(StringBuffer html) {
+    	Set<String> result = new HashSet<String>();
 
         // 将字符串解析为html文档
         Document doc = Jsoup.parse(html.toString());
@@ -50,7 +52,9 @@ public class DataHandlerImpl implements DataHandler {
             Element e = i.next();
             String r = e.attr("href");
             if (RegexUtil.validateSting(r, "[a-zA-z]+://[^//s]*")) {
-                result.add(r);
+            	if(!result.contains(r)) {
+            		result.add(r);
+            	}
             }
         }
 

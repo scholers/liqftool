@@ -26,8 +26,7 @@ public class Downloader extends Thread {
 	private String saveFileName;
 	private JTextArea messageArea;
 
-	//private static final String FILE_PATH = "d://pic//";
-	private String filePath = "d://pic//";
+	private String filePath = null;
 
 	public Downloader(String name, String url, String saveFileName,
 			CyclicBarrier cb) {

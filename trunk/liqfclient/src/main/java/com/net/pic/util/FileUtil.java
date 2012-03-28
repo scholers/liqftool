@@ -2,7 +2,6 @@ package com.net.pic.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,23 +13,18 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * 封装了文件操作
+ * @author jill
+ *
+ */
 public class FileUtil {
 
-	private static final String saveFileName = "";
-
-	private static final String FILE_PATH = "d://pic//";
-
 	public static void toFile(InputStream in, String filePath, String fileName) {
-		if (filePath == null) {
-			filePath = FILE_PATH;
-		}
-		if (fileName == null) {
-			filePath = saveFileName;
-		}
+		
 		try {
 			DataInputStream dis = new DataInputStream(in);
 			java.io.File myFilePath = new java.io.File(filePath);
@@ -67,7 +61,7 @@ public class FileUtil {
 			String fileName) {
 		File writeFile = new File(filePath + fileName);
 		boolean isAppend = false;
-		if (writeFile.exists()) {
+		if (writeFile.exists()) {//文件存在，则比较文件
 			isAppend = true;
 			// 去重
 			Set<FileBean> currentFileList = readFileByLines(filePath + fileName);
@@ -82,7 +76,14 @@ public class FileUtil {
 			}
 			fileList.clear();
 			fileList.addAll(tempFileList);
-		} 
+		} else {
+			//创建文件
+			try {
+				writeFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+		}
 		
 		FileWriter fw;
 		try {
