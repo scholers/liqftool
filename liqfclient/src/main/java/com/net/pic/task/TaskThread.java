@@ -2,7 +2,7 @@ package com.net.pic.task;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JTextArea;
@@ -16,12 +16,12 @@ public class TaskThread implements Runnable {
 
     private DataFetcher fetcher = null;
     private DataHandler hander = null;
-    private List<String> imgList = null;
+    private Set<String> imgList = null;
     private String url = null;
     private HttpClientUrl clintUrl = null;
 
 	public TaskThread(String url, HttpClientUrl clintUrl,
-			CountDownLatch cb, DataFetcher fetcher, DataHandler hander, List<String> imgList) {
+			CountDownLatch cb, DataFetcher fetcher, DataHandler hander, Set<String> imgList) {
 		
 		this.threadsSignal = cb;
 		this.fetcher = fetcher;
@@ -32,7 +32,7 @@ public class TaskThread implements Runnable {
 	}
 	
 	public TaskThread(String url, HttpClientUrl clintUrl,
-			CountDownLatch cb, JTextArea messageArea, DataFetcher fetcher, DataHandler hander, List<String> imgList) {
+			CountDownLatch cb, JTextArea messageArea, DataFetcher fetcher, DataHandler hander, Set<String> imgList) {
 		
 		this.threadsSignal = cb;
 		this.fetcher = fetcher;

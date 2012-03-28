@@ -1,6 +1,7 @@
 package com.net.pic;
 
 import java.util.List;
+import java.util.Set;
 
 public interface DataHandler {
 	 /**
@@ -9,7 +10,7 @@ public interface DataHandler {
      * @param html html文档内容
      * @return
      */
-    public List<String> getUrls(StringBuffer html);
+    public Set<String> getUrls(StringBuffer html);
     
     /**
      * 获取文档中图片地址
@@ -17,7 +18,7 @@ public interface DataHandler {
      * @param html html文档内容
      * @return
      */
-    public List<String> getImageUrls(StringBuffer html);
+    public Set<String> getImageUrls(StringBuffer html);
     
     
 }
