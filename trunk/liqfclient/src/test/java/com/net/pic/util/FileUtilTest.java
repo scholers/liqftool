@@ -5,7 +5,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -37,5 +39,17 @@ public class FileUtilTest {
 		String fileName = "fileList.txt";
 		
 		FileUtil.toFile(fileList, filePath, fileName);
+	}
+	@Test
+	public void testSet() {
+		Set<String> testSet = new HashSet<String>();
+		String a1 = "http://www.sina.com.cn";
+		testSet.add(a1);
+		String a2 = "http://www.sina.com.cn";
+		if(testSet.contains(a2)) {
+			testSet.add(a2);
+			System.out.println("trur");
+		}
+		
 	}
 }
