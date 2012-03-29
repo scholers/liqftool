@@ -12,6 +12,9 @@ import java.util.concurrent.Executors;
 
 import javax.swing.JTextArea;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.net.pic.task.DownPicThread;
 import com.net.pic.task.TaskThread;
 import com.net.pic.ui.HttpClientUrl;
@@ -21,6 +24,7 @@ import com.net.pic.util.FileUtil;
 
 
 public class ControllerImpl implements Controller {
+	private static Log logger = LogFactory.getLog(ControllerImpl.class); 
 	private MainWin mainWin;
     private JTextArea messageArea;
     private DataFetcher fetcher = new DataFetcherImpl();
@@ -70,7 +74,7 @@ public class ControllerImpl implements Controller {
      			e.printStackTrace();
      		} //等待所有子线程执行完   
      		//do work
-     		System.out.println(Thread.currentThread().getName() + "+++++++结束.");
+           	logger.debug(Thread.currentThread().getName() + "+++++++结束.");
      		//finish thread
      		executor.shutdown();
         }
@@ -106,7 +110,7 @@ public class ControllerImpl implements Controller {
 			threadSignal.await();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.equals(e.fillInStackTrace());
 		} //等待所有子线程执行完   
 		//do work
 		//finish thread
@@ -126,14 +130,14 @@ public class ControllerImpl implements Controller {
 	 */
     public static void main(String[] args) {
     	String siteUrl = "http://www.xfjiayuan.com/";
-    	String fileDir = "d://pic2//";
+    	String fileDir = "d://pic3//";
     	Controller controller = new ControllerImpl(siteUrl);
         String testUrl = "http://www.xfjiayuan.com/forum-25-1.html";
         String testUrl2 = "http://www.xfjiayuan.com/forum-784-1.html";
         String testUrl3 = "http://www.xfjiayuan.com/forum-784-1.html";
         //二级解析
         try {
-    		List<File> fileList = controller.fetchImages(testUrl2, fileDir);
+    		List<File> fileList = controller.fetchImages(testUrl3, fileDir);
     	} catch (MalformedURLException e) {
     		// TODO Auto-generated catch block
     		e.printStackTrace();

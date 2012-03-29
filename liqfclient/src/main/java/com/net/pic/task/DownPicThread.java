@@ -54,17 +54,7 @@ public class DownPicThread implements Runnable {
 			System.out.println("¿ªÊ¼ÏÂÔØ" + this.saveFileName + "...");
 			URL url = new URL(this.urlStr);
 			DataInputStream dis = new DataInputStream(url.openStream());
-			/*
-			OutputStream fos = new FileOutputStream(new File(filePath
-					+ "//" + this.saveFileName));
 			
-			byte[] buff = new byte[1024];
-			int len = -1;
-			while ((len = dis.read(buff)) != -1) {
-				fos.write(buff, 0, len);
-			}
-			buff = null;
-			*/
 			FileUtil.toFile(dis, filePath, this.saveFileName);
 			
 			dis.close();

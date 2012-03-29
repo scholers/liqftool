@@ -16,12 +16,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * 封装了文件操作
  * @author jill
  *
  */
 public class FileUtil {
+	private static Log logger = LogFactory.getLog(FileUtil.class); 
 
 	public static void toFile(InputStream in, String filePath, String fileName) {
 		
@@ -44,9 +48,9 @@ public class FileUtil {
 			
 			System.out.println("下载文件" + fileName + "完成");
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.equals(e.fillInStackTrace());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.equals(e.fillInStackTrace());
 		}
 	}
 	
@@ -77,11 +81,15 @@ public class FileUtil {
 			fileList.clear();
 			fileList.addAll(tempFileList);
 		} else {
+			java.io.File myFilePath = new java.io.File(filePath);
+			if (!myFilePath.exists()) {
+				myFilePath.mkdir();
+			}
 			//创建文件
 			try {
 				writeFile.createNewFile();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.equals(e.fillInStackTrace());
 			} 
 		}
 		
@@ -97,7 +105,7 @@ public class FileUtil {
 	        fw.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.equals(e.fillInStackTrace());
 		}
 		   
 	}
@@ -112,23 +120,21 @@ public class FileUtil {
 		try {
 			reader = new BufferedReader(new FileReader(file));
 			String tempString = null;
-			int line = 1;
 			// 一次读入一行，直到读入null为文件结束
 			while ((tempString = reader.readLine()) != null) {
 				FileBean fileBean = new FileBean();
 				fileBean.setFileName(tempString);
 				fileList.add(fileBean);
-				// 显示行号
-				line++;
 			}
 			reader.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.equals(e.fillInStackTrace());
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e1) {
+					logger.equals(e1.fillInStackTrace());
 				}
 			}
 		}
