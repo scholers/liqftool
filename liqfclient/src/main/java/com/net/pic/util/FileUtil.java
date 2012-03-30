@@ -46,8 +46,6 @@ public class FileUtil {
 			buff = null;
 			fos.close();
 			dis.close();
-			
-			System.out.println("下载文件" + fileName + "完成");
 		} catch (MalformedURLException e) {
 			logger.equals(e.fillInStackTrace());
 		} catch (IOException e) {
