@@ -1,28 +1,28 @@
 package com.net.pic.task;
 
 import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JTextArea;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.net.pic.util.FileUtil;
 
 public class DownPicThread implements Runnable {
+	
+	private static Log logger = LogFactory.getLog(DownPicThread.class);
 	private CountDownLatch threadsSignal;
 
-	//private CyclicBarrier cb;
 	private String urlStr;
 	private String saveFileName;
 	private JTextArea messageArea;
 
-	//private static final String FILE_PATH = "d://pic//";
-	private String filePath = "d://pic//";
+	private String filePath = null;
 
 	public DownPicThread(String url, String saveFileName,
 			CountDownLatch cb) {
@@ -48,17 +48,15 @@ public class DownPicThread implements Runnable {
 
 	public void run() {
 		System.out.println(Thread.currentThread().getName() + "开始...");
-		//do shomething
-		long thredCount = threadsSignal.getCount();
 		try {
-			System.out.println("开始下载" + this.saveFileName + "...");
+			logger.debug("开始下载" + this.saveFileName + "...");
 			URL url = new URL(this.urlStr);
 			DataInputStream dis = new DataInputStream(url.openStream());
 			
 			FileUtil.toFile(dis, filePath, this.saveFileName);
 			
 			dis.close();
-			System.out.println("下载文件" + this.saveFileName + "完成");
+			logger.debug("下载文件" + this.saveFileName + "完成");
 			if(messageArea != null) {
 				messageArea.setText(
 	                    messageArea.getText() + "/n" + filePath + "//" 
@@ -66,14 +64,14 @@ public class DownPicThread implements Runnable {
 	                            + " 下载完成！");
 			}
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error(e.fillInStackTrace());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.fillInStackTrace());
 
 		}
 		//线程结束时计数器减1
 		threadsSignal.countDown();  
-		System.out.println(Thread.currentThread().getName() + "结束. 还有"
+		logger.debug(Thread.currentThread().getName() + "结束. 还有"
 				+ threadsSignal.getCount() + " 个线程");
 	}
 }
