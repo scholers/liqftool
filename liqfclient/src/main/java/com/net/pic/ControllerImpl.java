@@ -31,20 +31,26 @@ public class ControllerImpl implements Controller {
     private DataHandler hander = new DataHandlerImpl();
     private DataHandler urlHander = new UrlHandlerImpl();
     private String siteUrl = null;
+    private String loginUrl = null;
+    private String userName = null;
+    private String password = null;
 
     public ControllerImpl(MainWin mainWin) {
         this.mainWin = mainWin;
         this.messageArea = mainWin.getMessageArea();
     }
 
-    public ControllerImpl(String siteUrl) {
+    public ControllerImpl(String siteUrl, String loginUrl, String userName, String password) {
     	this.siteUrl = siteUrl;
-
+    	this.loginUrl = loginUrl;
+    	this.userName = userName;
+    	this.password = password;
+    	
     }
     
     public List<File> fetchImages(String pageUrl, String imgSaveDir)
             throws MalformedURLException, IOException {
-    	HttpClientUrl clintUrl = new HttpClientUrl();
+    	HttpClientUrl clintUrl = new HttpClientUrl(loginUrl, userName, password,null);
         // 获取html页面
         StringBuffer page = fetcher.fetchHtml(pageUrl, clintUrl);
 
@@ -71,7 +77,7 @@ public class ControllerImpl implements Controller {
      			threadSignal.await();
      		} catch (InterruptedException e) {
      			// TODO Auto-generated catch block
-     			e.printStackTrace();
+     			logger.error(e.fillInStackTrace());
      		} //等待所有子线程执行完   
      		//do work
            	logger.debug(Thread.currentThread().getName() + "+++++++结束.");
@@ -98,7 +104,7 @@ public class ControllerImpl implements Controller {
 		//初始化countDown
 		CountDownLatch threadSignal = new CountDownLatch(threadNum);
       //创建固定长度的线程池
-      	ExecutorService executor = Executors.newFixedThreadPool(50);
+      	ExecutorService executor = Executors.newCachedThreadPool();
       	int i = 0;
       	for (FileBean fileBean : fileBeanList) { //开threadNum个线程   
       		String newFileName = System.currentTimeMillis() +"_00" + i +".jpg";
@@ -129,22 +135,34 @@ public class ControllerImpl implements Controller {
 	 *
 	 */
     public static void main(String[] args) {
-    	String siteUrl = "http://www.xfjiayuan.com/";
-    	String fileDir = "d://pic3//";
-    	Controller controller = new ControllerImpl(siteUrl);
-        String testUrl = "http://www.xfjiayuan.com/forum-25-1.html";
-        String testUrl2 = "http://www.xfjiayuan.com/forum-784-1.html";
-        String testUrl3 = "http://www.xfjiayuan.com/forum-784-1.html";
+    	String siteUrl = "http://a.xfjiayuan.com/";
+    	//login url
+    	String loginUrl = siteUrl + "logging.php?action=login";
+    	String password = "790521";
+    	String userName = "scholers";
+    	
+    	//output dir
+    	String fileDir = "d://pic2//";
+    	Controller controller = new ControllerImpl(siteUrl,loginUrl,userName,password);
+        String testUrl = siteUrl + "forum-25-1.html";
+        String testUrl2 = siteUrl + "forum-784-1.html";
+        String testUrl3 = siteUrl + "forum-161-1.html";
         //二级解析
         try {
-    		List<File> fileList = controller.fetchImages(testUrl3, fileDir);
+        	
+        	//for(int i = 0; i < 9; i ++) {
+        		testUrl = siteUrl + "forum-25-" + 3 + ".html";
+        		controller.fetchImages(testUrl, fileDir);
+        		//Thread.sleep(5000);
+        	//}
     	} catch (MalformedURLException e) {
     		// TODO Auto-generated catch block
     		e.printStackTrace();
     	} catch (IOException e) {
     		// TODO Auto-generated catch block
     		e.printStackTrace();
-    	}
+    	
+		}
     }
 
 }
