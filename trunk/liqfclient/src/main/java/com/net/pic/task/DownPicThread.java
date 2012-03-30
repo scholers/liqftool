@@ -1,13 +1,17 @@
 package com.net.pic.task;
 
 import java.io.DataInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JTextArea;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,15 +51,14 @@ public class DownPicThread implements Runnable {
 	}
 
 	public void run() {
-		System.out.println(Thread.currentThread().getName() + "开始...");
+		logger.debug(Thread.currentThread().getName() + "开始...");
+		 HttpClient client = new HttpClient();  
+	     GetMethod httpGet = new GetMethod(this.urlStr);  
 		try {
 			logger.debug("开始下载" + this.saveFileName + "...");
-			URL url = new URL(this.urlStr);
-			DataInputStream dis = new DataInputStream(url.openStream());
-			
-			FileUtil.toFile(dis, filePath, this.saveFileName);
-			
-			dis.close();
+		    client.executeMethod(httpGet);  
+			InputStream in = httpGet.getResponseBodyAsStream();  
+			FileUtil.toFile(in, filePath, this.saveFileName);
 			logger.debug("下载文件" + this.saveFileName + "完成");
 			if(messageArea != null) {
 				messageArea.setText(

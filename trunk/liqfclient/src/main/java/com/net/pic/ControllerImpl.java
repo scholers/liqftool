@@ -65,7 +65,7 @@ public class ControllerImpl implements Controller {
      		//初始化countDown
      		CountDownLatch threadSignal = new CountDownLatch(threadNum);
            //创建固定长度的线程池
-           	ExecutorService executor = Executors.newFixedThreadPool(50);
+           	ExecutorService executor = Executors.newFixedThreadPool(30);
            	for(String tempUrl : urlStrs) { //开threadNum个线程   
            		HttpClientUrl clintUrlTemp = new HttpClientUrl();
            		clintUrlTemp.setCookieArr(clintUrl.getCookieArr());
@@ -104,7 +104,7 @@ public class ControllerImpl implements Controller {
 		//初始化countDown
 		CountDownLatch threadSignal = new CountDownLatch(threadNum);
       //创建固定长度的线程池
-      	ExecutorService executor = Executors.newCachedThreadPool();
+      	ExecutorService executor = Executors.newFixedThreadPool(30);
       	int i = 0;
       	for (FileBean fileBean : fileBeanList) { //开threadNum个线程   
       		String newFileName = System.currentTimeMillis() +"_00" + i +".jpg";
@@ -151,7 +151,7 @@ public class ControllerImpl implements Controller {
         try {
         	
         	//for(int i = 0; i < 9; i ++) {
-        		testUrl = siteUrl + "forum-25-" + 3 + ".html";
+        		testUrl = siteUrl + "forum-25-" + 5 + ".html";
         		controller.fetchImages(testUrl, fileDir);
         		//Thread.sleep(5000);
         	//}
