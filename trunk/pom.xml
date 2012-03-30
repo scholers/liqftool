@@ -189,6 +189,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>jsoup</artifactId>
   <version>1.6.1</version>
 </dependency>
+<dependency>
+	<groupId>org.apache.directory.studio</groupId>
+	<artifactId>org.apache.commons.io</artifactId>
+	<version>2.1</version>
+</dependency>
 		</dependencies>
 
 

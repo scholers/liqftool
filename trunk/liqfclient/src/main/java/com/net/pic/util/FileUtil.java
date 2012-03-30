@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.io.FileUtils;
 
 /**
  * 封装了文件操作
@@ -139,6 +140,10 @@ public class FileUtil {
 			}
 		}
 		return fileList;
+	}
+	
+	public void writeFile() {
+		//FileUtils.w(null);
 	}
 
 }
