@@ -107,7 +107,9 @@ public class ControllerImpl implements Controller {
       	ExecutorService executor = Executors.newFixedThreadPool(30);
       	int i = 0;
       	for (FileBean fileBean : fileBeanList) { //开threadNum个线程   
-      		String newFileName = System.currentTimeMillis() +"_00" + i +".jpg";
+      		//String newFileName = System.currentTimeMillis() +"_00" + i +".jpg";
+      		String newFileName = fileBean.getFileName().substring(fileBean.getFileName().lastIndexOf("/") + 1,
+      				fileBean.getFileName().length());
 			Runnable task = new DownPicThread(fileBean.getFileName(), newFileName, imgSaveDir, threadSignal, messageArea);
 			executor.execute(task);
 			i ++;
@@ -155,7 +157,7 @@ public class ControllerImpl implements Controller {
     		password = "790521";
     	}
     	if(userName == null || userName.length() <= 0) {
-    		userName = "scholerscn";
+    		userName = "scholers";
     	}
     	
     	//output dir
@@ -167,7 +169,7 @@ public class ControllerImpl implements Controller {
     		testUrl = siteUrl + "forum-25-1.html";
     	}
         String testUrl2 = siteUrl + "forum-784-1.html";
-        String testUrl3 = siteUrl + "forum-161-1.html";
+        String testUrl3 = siteUrl + "forum-881-1.html";
         
         if(fileDir2 == null || fileDir2.length() <= 0) {
         	fileDir2 = "d://pic2//pic2//";
@@ -181,8 +183,8 @@ public class ControllerImpl implements Controller {
         	
         	//for(int i = 0; i < 9; i ++) {
         		//testUrl = siteUrl + "forum-25-" + 5 + ".html";
-        		controller.fetchImages(testUrl, fileDir);
-        		controller.fetchImages(testUrl2, fileDir2);
+        		//controller.fetchImages(testUrl, fileDir);
+        		//controller.fetchImages(testUrl2, fileDir2);
         		controller.fetchImages(testUrl3, fileDir3);
         		//Thread.sleep(5000);
         	//}
