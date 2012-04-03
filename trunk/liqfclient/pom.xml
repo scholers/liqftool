@@ -149,8 +149,8 @@
 	<artifactId>jsoup</artifactId>
 </dependency>
 <dependency>
-	<groupId>org.apache.directory.studio</groupId>
-	<artifactId>org.apache.commons.io</artifactId>
+	<groupId>commons-io</groupId>
+	<artifactId>commons-io</artifactId>
 </dependency>
 	</dependencies>
 </project>
