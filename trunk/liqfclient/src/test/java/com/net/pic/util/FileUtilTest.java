@@ -52,4 +52,10 @@ public class FileUtilTest {
 		}
 		
 	}
+	@Test
+	public void testGetFileName() {
+		String fileName = "http://tu.huzhu6.com/forum/month_1102/11022712068973dd4944e931fe.jpg";
+		String newFileName = fileName.substring(fileName.lastIndexOf("/") + 1, fileName.length());
+		System.out.println(newFileName);
+	}
 }
