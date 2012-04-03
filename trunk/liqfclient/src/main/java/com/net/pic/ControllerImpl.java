@@ -135,24 +135,55 @@ public class ControllerImpl implements Controller {
 	 *
 	 */
     public static void main(String[] args) {
-    	String siteUrl = "http://a.xfjiayuan.com/";
+    	String siteUrl = args[0];
+    	String loginUrl = args[1];
+    	String password = args[2];
+    	String userName = args[3];
+    	String fileDir = args[4];
+    	String testUrl = args[5];
+    	String fileDir2 = args[6];
+    	String fileDir3 = args[7];
+    	if(siteUrl == null || siteUrl.length() <= 0) {
+    		//defaule site url
+    		siteUrl = "http://a.xfjiayuan.com/";
+    	}
     	//login url
-    	String loginUrl = siteUrl + "logging.php?action=login";
-    	String password = "790521";
-    	String userName = "scholers";
+    	if(loginUrl == null || loginUrl.length() <= 0) {
+    		loginUrl = siteUrl + "logging.php?action=login";
+    	}
+    	if(password == null || password.length() <= 0) {
+    		password = "790521";
+    	}
+    	if(userName == null || userName.length() <= 0) {
+    		userName = "scholerscn";
+    	}
     	
     	//output dir
-    	String fileDir = "d://pic2//";
+    	if(fileDir == null || fileDir.length() <= 0) {
+    		fileDir = "d://pic2//";
+    	}
     	Controller controller = new ControllerImpl(siteUrl,loginUrl,userName,password);
-        String testUrl = siteUrl + "forum-25-1.html";
+    	if(testUrl == null || testUrl.length() <= 0) {
+    		testUrl = siteUrl + "forum-25-1.html";
+    	}
         String testUrl2 = siteUrl + "forum-784-1.html";
         String testUrl3 = siteUrl + "forum-161-1.html";
+        
+        if(fileDir2 == null || fileDir2.length() <= 0) {
+        	fileDir2 = "d://pic2//pic2//";
+    	}
+        
+        if(fileDir3 == null || fileDir3.length() <= 0) {
+        	fileDir3 = "d://pic2//pic3//";
+    	}
         //¶þ¼¶½âÎö
         try {
         	
         	//for(int i = 0; i < 9; i ++) {
-        		testUrl = siteUrl + "forum-25-" + 5 + ".html";
+        		//testUrl = siteUrl + "forum-25-" + 5 + ".html";
         		controller.fetchImages(testUrl, fileDir);
+        		controller.fetchImages(testUrl2, fileDir2);
+        		controller.fetchImages(testUrl3, fileDir3);
         		//Thread.sleep(5000);
         	//}
     	} catch (MalformedURLException e) {
