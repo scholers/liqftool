@@ -14,12 +14,13 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 import com.net.pic.util.FileUtil;
 
 public class DownPicThread implements Runnable {
 	
-	private static Log logger = LogFactory.getLog(DownPicThread.class);
+	private static Logger logger = Logger.getLogger(DownPicThread.class);
 	private CountDownLatch threadsSignal;
 
 	private String urlStr;

@@ -6,8 +6,7 @@ import java.io.InputStream;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
 
 /**
  * 
@@ -15,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
  *
  */
 public class HttpClientUrl {
-	private static Log logger = LogFactory.getLog(HttpClientUrl.class);
+	private static Logger logger = Logger.getLogger(HttpClientUrl.class);
 
 	private String url = null;
 	// µÇÂ¼url
