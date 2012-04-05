@@ -7,11 +7,14 @@ import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JTextArea;
 
+import org.apache.log4j.Logger;
+
 import com.net.pic.DataFetcher;
 import com.net.pic.DataHandler;
 import com.net.pic.ui.HttpClientUrl;
 
 public class TaskThread implements Runnable {
+	private static Logger logger = Logger.getLogger(TaskThread.class);
 	private CountDownLatch threadsSignal;
 
     private DataFetcher fetcher = null;
@@ -43,7 +46,7 @@ public class TaskThread implements Runnable {
 	}
 
 	public void run() {
-		System.out.println(Thread.currentThread().getName() + "开始...");
+		logger.info(Thread.currentThread().getName() + "开始...");
 		try {
 			StringBuffer page = fetcher.fetchHtml(url, clintUrl);
 			imgList.addAll(hander.getImageUrls(page));
@@ -54,7 +57,7 @@ public class TaskThread implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(Thread.currentThread().getName() + "结束. 还有"
+		logger.info(Thread.currentThread().getName() + "结束. 还有"
 				+ threadsSignal.getCount() + " 个线程");
 	}
 }

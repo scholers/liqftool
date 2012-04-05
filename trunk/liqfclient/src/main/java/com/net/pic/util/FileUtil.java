@@ -16,9 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 /**
  * 封装了文件操作
@@ -26,7 +24,7 @@ import org.apache.commons.io.FileUtils;
  *
  */
 public class FileUtil {
-	private static Log logger = LogFactory.getLog(FileUtil.class); 
+	private static Logger logger = Logger.getLogger(FileUtil.class); 
 
 	public static void toFile(InputStream in, String filePath, String fileName) {
 		

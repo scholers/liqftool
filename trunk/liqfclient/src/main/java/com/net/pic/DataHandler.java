@@ -1,6 +1,5 @@
 package com.net.pic;
 
-import java.util.List;
 import java.util.Set;
 
 public interface DataHandler {

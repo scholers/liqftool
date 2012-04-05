@@ -12,8 +12,9 @@ import java.util.concurrent.Executors;
 
 import javax.swing.JTextArea;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.Logger;
+
+
 
 import com.net.pic.task.DownPicThread;
 import com.net.pic.task.TaskThread;
@@ -24,7 +25,7 @@ import com.net.pic.util.FileUtil;
 
 
 public class ControllerImpl implements Controller {
-	private static Log logger = LogFactory.getLog(ControllerImpl.class); 
+	private static Logger logger = Logger.getLogger(ControllerImpl.class); 
 	private MainWin mainWin;
     private JTextArea messageArea;
     private DataFetcher fetcher = new DataFetcherImpl();
@@ -169,14 +170,14 @@ public class ControllerImpl implements Controller {
     		testUrl = siteUrl + "forum-25-1.html";
     	}
         String testUrl2 = siteUrl + "forum-784-1.html";
-        String testUrl3 = siteUrl + "forum-881-1.html";
+        String testUrl3 = siteUrl + "forum-881-5.html";
         
         if(fileDir2 == null || fileDir2.length() <= 0) {
         	fileDir2 = "d://pic2//pic2//";
     	}
         
         if(fileDir3 == null || fileDir3.length() <= 0) {
-        	fileDir3 = "d://pic2//pic3//";
+        	fileDir3 = "d://pic2//pic4//";
     	}
         //¶þ¼¶½âÎö
         try {
