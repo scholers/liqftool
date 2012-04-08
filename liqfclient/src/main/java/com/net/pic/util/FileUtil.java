@@ -49,8 +49,6 @@ public class FileUtil {
 			
 		} catch (MalformedURLException e) {
 			logger.error(e.fillInStackTrace());
-		} catch (IOException e) {
-			logger.error(e.fillInStackTrace());
 		} finally {
 			if(fos != null) {
 				fos.close();
@@ -72,8 +70,6 @@ public class FileUtil {
 			FileUtils.copyURLToFile(source, writeFile);
 			
 		} catch (MalformedURLException e) {
-			logger.error(e.fillInStackTrace());
-		} catch (IOException e) {
 			logger.error(e.fillInStackTrace());
 		} finally {
 			if(fos != null) {
@@ -159,10 +155,6 @@ public class FileUtil {
 				bw.write(fileBean.getFileName()); 
 		        bw.newLine();//¶ÏÐÐ 
 			}
-			
-	       
-		} catch (IOException e) {
-			logger.error(e.fillInStackTrace());
 		} finally {
 			if(bw != null) {
 				bw.close();
