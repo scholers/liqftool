@@ -46,18 +46,16 @@ public class TaskThread implements Runnable {
 	}
 
 	public void run() {
-		logger.info(Thread.currentThread().getName() + "开始...");
+		
 		try {
 			StringBuffer page = fetcher.fetchHtml(url, clintUrl);
 			imgList.addAll(hander.getImageUrls(page));
 			//线程结束时计数器减1
 			threadsSignal.countDown();  
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error(e.fillInStackTrace());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.fillInStackTrace());
 		}
-		logger.info(Thread.currentThread().getName() + "结束. 还有"
-				+ threadsSignal.getCount() + " 个线程");
 	}
 }

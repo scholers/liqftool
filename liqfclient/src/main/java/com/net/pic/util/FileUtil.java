@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -45,12 +46,36 @@ public class FileUtil {
 			fos.close();
 			dis.close();
 		} catch (MalformedURLException e) {
-			logger.equals(e.fillInStackTrace());
+			logger.error(e.fillInStackTrace());
 		} catch (IOException e) {
-			logger.equals(e.fillInStackTrace());
+			logger.error(e.fillInStackTrace());
 		}
 	}
-	
+
+	/**
+	 * 创建绝对路径(包含多级)
+	 * 
+	 * @param header
+	 *            绝对路径的前半部分(已存在)
+	 * @param tail
+	 *            绝对路径的后半部分(第一个和最后一个字符不能是/，格式：123/258/456)
+	 * @return 新创建的绝对路径
+	 */ 
+	public String makeDir(String header, String tail) { 
+	    String[] sub = tail.split("/"); 
+	    File dir = new File(header); 
+	    for (int i = 0; i < sub.length; i++) { 
+	        if (!dir.exists()) { 
+	            dir.mkdir(); 
+	        } 
+	        File dir2 = new File(dir + File.separator + sub[i]); 
+	        if (!dir2.exists()) { 
+	            dir2.mkdir(); 
+	        } 
+	        dir = dir2; 
+	    } 
+	    return dir.toString(); 
+	} 
 
 	/**
 	 * 
@@ -63,6 +88,7 @@ public class FileUtil {
 		File writeFile = new File(filePath + fileName);
 		boolean isAppend = false;
 		if (writeFile.exists()) {//文件存在，则比较文件
+			logger.info("File " + filePath + fileName + " is exists!");
 			isAppend = true;
 			// 去重
 			Set<FileBean> currentFileList = readFileByLines(filePath + fileName);
@@ -78,15 +104,18 @@ public class FileUtil {
 			fileList.clear();
 			fileList.addAll(tempFileList);
 		} else {
+			logger.info("File " + filePath + fileName + " is not exists!");
 			java.io.File myFilePath = new java.io.File(filePath);
 			if (!myFilePath.exists()) {
 				myFilePath.mkdir();
+			
 			}
 			//创建文件
 			try {
 				writeFile.createNewFile();
+				logger.info("Create " + filePath + fileName);
 			} catch (IOException e) {
-				logger.equals(e.fillInStackTrace());
+				logger.error("Create File Failed:::" + e.fillInStackTrace());
 			} 
 		}
 		
@@ -101,8 +130,7 @@ public class FileUtil {
 			bw.close();
 	        fw.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			logger.equals(e.fillInStackTrace());
+			logger.error(e.fillInStackTrace());
 		}
 		   
 	}
@@ -125,13 +153,13 @@ public class FileUtil {
 			}
 			reader.close();
 		} catch (IOException e) {
-			logger.equals(e.fillInStackTrace());
+			logger.error(e.fillInStackTrace());
 		} finally {
 			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e1) {
-					logger.equals(e1.fillInStackTrace());
+					logger.error(e1.fillInStackTrace());
 				}
 			}
 		}
