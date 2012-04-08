@@ -50,12 +50,15 @@ public class TaskThread implements Runnable {
 		try {
 			StringBuffer page = fetcher.fetchHtml(url, clintUrl);
 			imgList.addAll(hander.getImageUrls(page));
-			//线程结束时计数器减1
-			threadsSignal.countDown();  
+			
 		} catch (MalformedURLException e) {
 			logger.error(e.fillInStackTrace());
 		} catch (IOException e) {
-			logger.error(e.fillInStackTrace());
+			logger.error(e.fillInStackTrace());	
+		}finally {
+			//线程结束时计数器减1
+			threadsSignal.countDown();  
 		}
+
 	}
 }

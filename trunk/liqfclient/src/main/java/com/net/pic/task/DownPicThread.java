@@ -3,12 +3,14 @@ package com.net.pic.task;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JTextArea;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import com.net.pic.util.FileUtil;
@@ -48,13 +50,16 @@ public class DownPicThread implements Runnable {
 
 	public void run() {
 		logger.debug(Thread.currentThread().getName() + "开始...");
-		 HttpClient client = new HttpClient();  
-	     GetMethod httpGet = new GetMethod(this.urlStr);  
+		 //HttpClient client = new HttpClient();  
+	    // GetMethod httpGet = new GetMethod(this.urlStr);  
+	     URL source = null;
 		try {
 			logger.debug("开始下载" + this.saveFileName + "...");
-		    client.executeMethod(httpGet);  
-			InputStream in = httpGet.getResponseBodyAsStream();  
-			FileUtil.toFile(in, filePath, this.saveFileName);
+			source = new URL(this.urlStr);
+		   // client.executeMethod(httpGet);  
+			//InputStream in = httpGet.getResponseBodyAsStream();  
+			FileUtil.copyUrlToFile(source, filePath, this.saveFileName);
+			
 			logger.debug("下载文件" + this.saveFileName + "完成");
 			if(messageArea != null) {
 				messageArea.setText(
@@ -63,15 +68,16 @@ public class DownPicThread implements Runnable {
 	                            + " 下载完成！");
 			}
 		} catch (MalformedURLException e) {
-			logger.error(e.fillInStackTrace());
+			logger.error("下载文件" + this.saveFileName + "失败" + e.fillInStackTrace());
 		} catch (IOException e) {
-			logger.error(e.fillInStackTrace());
-
+			logger.error("下载文件" + this.saveFileName + "失败" + e.fillInStackTrace());
+		}finally {
+			//线程结束时计数器减1
+			threadsSignal.countDown();  
+			logger.debug(Thread.currentThread().getName() + "结束. 还有"
+					+ threadsSignal.getCount() + " 个线程");
 		}
-		//线程结束时计数器减1
-		threadsSignal.countDown();  
-		logger.debug(Thread.currentThread().getName() + "结束. 还有"
-				+ threadsSignal.getCount() + " 个线程");
+
 	}
 }
 
