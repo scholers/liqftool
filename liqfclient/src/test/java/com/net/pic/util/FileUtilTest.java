@@ -3,6 +3,7 @@ package com.net.pic.util;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,11 +16,16 @@ public class FileUtilTest {
 	@Test
 	public void validateStingTest() {
 		String test = "ddddd";
-		String filePath = "d://pic//";
+		String filePath = "d://pic//pic3//";
 		String fileName = "a.txt";
 		InputStream in  = new   ByteArrayInputStream(test.getBytes());
 		
-		FileUtil.toFile(in, filePath, fileName);
+		try {
+			FileUtil.toFile(in, filePath, fileName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test
@@ -38,7 +44,12 @@ public class FileUtilTest {
 		String filePath = "d://pic//";
 		String fileName = "fileList.txt";
 		
-		FileUtil.toFile(fileList, filePath, fileName);
+		try {
+			FileUtil.toFile(fileList, filePath, fileName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	@Test
 	public void testSet() {
