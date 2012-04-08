@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -27,28 +28,57 @@ import org.apache.log4j.Logger;
 public class FileUtil {
 	private static Logger logger = Logger.getLogger(FileUtil.class); 
 
-	public static void toFile(InputStream in, String filePath, String fileName) {
-		
+	public static void toFile(InputStream in, String filePath, String fileName) throws IOException {
+		OutputStream fos = null;
+		DataInputStream dis = null;
 		try {
-			DataInputStream dis = new DataInputStream(in);
+			dis = new DataInputStream(in);
 			java.io.File myFilePath = new java.io.File(filePath);
 			if (!myFilePath.exists()) {
 				myFilePath.mkdir();
 			}
 			File writeFile = new File(filePath + fileName);
-			OutputStream fos = new FileOutputStream(writeFile);
+			//FileUtils.writeByteArrayToFile(writeFile, dis.readByte());
+			fos = new FileOutputStream(writeFile);
 			byte[] buff = new byte[1024];
 			int len = -1;
 			while ((len = dis.read(buff)) != -1) {
 				fos.write(buff, 0, len);
 			}
 			buff = null;
-			fos.close();
-			dis.close();
+			
 		} catch (MalformedURLException e) {
 			logger.error(e.fillInStackTrace());
 		} catch (IOException e) {
 			logger.error(e.fillInStackTrace());
+		} finally {
+			if(fos != null) {
+				fos.close();
+			}
+			if(dis != null) {
+				dis.close();
+			}
+		}
+	}
+	
+	public static void copyUrlToFile(URL source, String filePath, String fileName) throws IOException {
+		OutputStream fos = null;
+		try {
+			java.io.File myFilePath = new java.io.File(filePath);
+			if (!myFilePath.exists()) {
+				myFilePath.mkdir();
+			}
+			File writeFile = new File(filePath + fileName);
+			FileUtils.copyURLToFile(source, writeFile);
+			
+		} catch (MalformedURLException e) {
+			logger.error(e.fillInStackTrace());
+		} catch (IOException e) {
+			logger.error(e.fillInStackTrace());
+		} finally {
+			if(fos != null) {
+				fos.close();
+			}
 		}
 	}
 
@@ -82,9 +112,10 @@ public class FileUtil {
 	 * @param fileList
 	 * @param filePath
 	 * @param fileName
+	 * @throws IOException 
 	 */
 	public static void toFile(List<FileBean> fileList, String filePath,
-			String fileName) {
+			String fileName) throws IOException {
 		File writeFile = new File(filePath + fileName);
 		boolean isAppend = false;
 		if (writeFile.exists()) {//文件存在，则比较文件
@@ -119,18 +150,26 @@ public class FileUtil {
 			} 
 		}
 		
-		FileWriter fw;
+		FileWriter fw = null;
+		BufferedWriter bw = null;
 		try {
 			fw = new FileWriter(filePath + fileName, isAppend);
-			BufferedWriter bw = new BufferedWriter(fw); 
+			bw = new BufferedWriter(fw); 
 			for(FileBean fileBean : fileList) {
 				bw.write(fileBean.getFileName()); 
 		        bw.newLine();//断行 
 			}
-			bw.close();
-	        fw.close();
+			
+	       
 		} catch (IOException e) {
 			logger.error(e.fillInStackTrace());
+		} finally {
+			if(bw != null) {
+				bw.close();
+			}
+			if(fw != null) {
+				 fw.close();
+			}
 		}
 		   
 	}

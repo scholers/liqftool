@@ -172,16 +172,16 @@ public class ControllerImpl implements Controller {
 
 		// output dir
 		if (fileDir == null || fileDir.length() <= 0) {
-			fileDir = "d://pic//";
+			fileDir = "d://pic4//";
 		}
 		Controller controller = new ControllerImpl(siteUrl, loginUrl, userName,
 				password);
 		if (testUrl == null || testUrl.length() <= 0) {
 			testUrl = siteUrl + "forum-25-1.html";
 		}
-		String testUrl2 = siteUrl + "forum-784-1.html";
-		String testUrl3 = siteUrl + "forum-881-4.html";
-		String testUrl4 = siteUrl + "forum-300-1.html";
+		String testUrl2 = siteUrl + "forum-784-2.html";
+		String testUrl3 = siteUrl + "forum-881-2.html";
+		String testUrl4 = siteUrl + "forum-300-5.html";
 
 		if (fileDir2 == null || fileDir2.length() <= 0) {
 			fileDir2 = "d://pic0//";
