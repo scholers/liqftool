@@ -1,16 +1,12 @@
 package com.net.pic.task;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.CountDownLatch;
 
 import javax.swing.JTextArea;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import com.net.pic.util.FileUtil;

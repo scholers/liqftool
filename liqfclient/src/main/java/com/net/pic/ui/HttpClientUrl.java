@@ -1,17 +1,31 @@
 package com.net.pic.ui;
 
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.List;
 
-import org.apache.commons.httpclient.Cookie;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.net.pic.util.RegexUtil;
 
 /**
  * 
  * @author jill
- *
+ * 
  */
 public class HttpClientUrl {
 	private static Logger logger = Logger.getLogger(HttpClientUrl.class);
@@ -19,6 +33,16 @@ public class HttpClientUrl {
 	private String url = null;
 	// 登录url
 	private String loginUrl = null;
+	private String siteUrl = null;
+
+	public String getSiteUrl() {
+		return siteUrl;
+	}
+
+	public void setSiteUrl(String siteUrl) {
+		this.siteUrl = siteUrl;
+	}
+
 	// 用户名称
 	private String userName = null;
 	// 密码
@@ -49,32 +73,33 @@ public class HttpClientUrl {
 	}
 
 	// 先建立一个客户端实例，将模拟一个浏览器
-	private HttpClient client = new HttpClient();
-	private Cookie[] cookieArr = null;
-
-	public Cookie[] getCookieArr() {
-		return cookieArr;
+	private DefaultHttpClient client = null;
+	private CookieStore cookiestore = null;
+	public CookieStore getCookiestore() {
+		return cookiestore;
 	}
 
-	public void setCookieArr(Cookie[] cookieArr) {
-		this.cookieArr = cookieArr;
-	}
-
-	/**
-	 * 8 * @param args 9 * @throws Exception 10
-	 */
-	public static void main(String[] args) {
-
+	public void setCookiestore(CookieStore cookiestore) {
+		this.cookiestore = cookiestore;
 	}
 
 	public HttpClientUrl() {
 	}
+	
+	public HttpClientUrl(CookieStore cookiestore) {
+		this.cookiestore = cookiestore;
+		client = new DefaultHttpClient();
+		client.setCookieStore(cookiestore);
+	}
 
-	public HttpClientUrl(String loginUrl, String userName, String password, String postUrl) {
+	public HttpClientUrl(String siteUrl, String loginUrl, String userName,
+			String password, String postUrl) {
+		this.siteUrl = siteUrl;
 		this.loginUrl = loginUrl;
 		this.userName = userName;
 		this.password = password;
 		this.url = postUrl;
+		client = new DefaultHttpClient();
 	}
 
 	public String getUrl() {
@@ -88,43 +113,43 @@ public class HttpClientUrl {
 	public String parseHtml() {
 
 		// not login
-		if (cookieArr == null) {
+		if (cookiestore == null) {
 			try {
-				cookieArr = login(client);
+				cookiestore = login();
 			} catch (Exception e) {
 				logger.error(e.fillInStackTrace());
+				return "";
 			}
 		}
-		String result = "";
+		StringBuilder strBuild = new StringBuilder();
 		// 获取cookie之后
-		if (cookieArr != null && cookieArr.length > 0) {
+		if (cookiestore != null && cookiestore.getCookies()!= null 
+				&& cookiestore.getCookies().size() > 0) {
 			// 之后再建立一个Post方法请求，提交刷新简历的表单，因为提交的参数较多，所以用Post请求好了
-			PostMethod method = new PostMethod(url);
-			client.getState().addCookies(cookieArr);
-
-			// 开始死循环
-			// while (true) {
+			HttpPost method = new HttpPost(url);
 			try {
 				// 这里是要求客户端发送一个请求。直接将PostMethod请求出去。
-				client.executeMethod(method);
-				// 下面是获取返回的结果
-				InputStream in = method.getResponseBodyAsStream();
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				byte[] buff = new byte[1024];
-				int len = -1;
-				while ((len = in.read(buff)) != -1) {
-					baos.write(buff, 0, len);
+				HttpResponse response = client.execute(method);
+				HttpEntity entity = response.getEntity();
+				// 必须要对entity进行处理，否则用同一个httpClient访问其他地址时，会抛出异常。这里是读取返回的content，然后关闭流。
+				InputStream is = entity.getContent();
+				BufferedReader br = new BufferedReader(
+						new InputStreamReader(is));
+				String str = "";
+				
+				while ((str = br.readLine()) != null) {
+					strBuild.append(str);
 				}
-				result = new String(baos.toByteArray());
-				// 释放资源
-				in.close();
-				baos.close();
+				is.close();
+				br.close();
+				client.getConnectionManager().shutdown(); // 关闭这个httpclient
 			} catch (Exception ex) {
 				logger.error(ex.fillInStackTrace());
 			}
 		}
-		return result;
+		return strBuild.toString();
 	}
+
 
 	/**
 	 * 登录验证，并且构造cookie
@@ -135,23 +160,105 @@ public class HttpClientUrl {
 	 * @return
 	 * @throws Exception
 	 */
-	private Cookie[] login(HttpClient client) throws Exception {
+	private CookieStore login() throws Exception {
 		System.out.println("使用马甲[" + getUserName() + "]登录");
+		// 登录请求
+		String siteLoginUrl = getSiteUrl() + getLoginUrl();
+		// 得到login formhash
+		HttpGet httpget = new HttpGet(siteLoginUrl);
+		HttpResponse response = client.execute(httpget);
+		HttpEntity entity = response.getEntity();
+		StringBuilder strBuild = new StringBuilder();
+		// 输出页面内容
+		if (entity != null) {
+			// String charset = EntityUtils.getContentCharSet(entity);
+			InputStream is = entity.getContent();
 
-		// 这个是URL地址，我经过分析51job网站登录后的跳转到的地址，并分析得它在JavaScript里提交的URL的参数，不同网站就自已分析了，这个就是登录后刷新简历的URL地址
-		String loginUrl = getLoginUrl();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			while ((line = br.readLine()) != null) {
+				strBuild.append(line);
+			}
+			is.close();
+		}
+		int pos = strBuild.indexOf("name=\"formhash\" value=");
+		// 找出这个 formhash 的内容，这是登录用的 formhash
+		String loginFormhash = strBuild.substring(pos + 23, pos + 23 + 8);
+		System.out.println(loginFormhash);
 
-		// 之后再建立一个Post方法请求，提交刷新简历的表单，因为提交的参数较多，所以用Post请求好了
-		PostMethod method = new PostMethod(loginUrl);
+		//create login parames
+		StringBuilder paramsBuilder = new StringBuilder(siteLoginUrl);
+		paramsBuilder
+		.append("&loginsubmit=yes")
+		.append("&loginfield=username")
+		.append("&username=").append(getUserName())
+		.append("&password=").append(getPassword())
+		.append("&formhash=").append(loginFormhash);
+		// 开始登录
+		HttpPost httpost = new HttpPost(paramsBuilder.toString());
 
-		// 下面的就是将要提交的表单的数据填入PostMethod对象里面，以name , value 对加入！
-		method.addParameter("username", getUserName());
-		method.addParameter("password", getPassword());
-		method.addParameter("loginsubmit", "1");
-		// 执行提交任务
-		client.executeMethod(method);
+		/*
+		 * List<NameValuePair> nvps = new ArrayList<NameValuePair>(); // post参数
+		 * nvps.add(new BasicNameValuePair("username", getUserName()));
+		 * nvps.add(new BasicNameValuePair("password", getPassword()));
+		 * nvps.add(new BasicNameValuePair("formhash", loginFormhash));
+		 * nvps.add(new BasicNameValuePair("loginfield", "username"));
+		 * nvps.add(new BasicNameValuePair("loginsubmit", "yes"));
+		 * 
+		 * httpost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8)); //
+		 */// 把参数用utf-8编码
 
-		return client.getState().getCookies();// 获得登录后的Cookie列
+		response = client.execute(httpost);
+		entity = response.getEntity(); // 获得HttpEntity
+		// login is ok?
+		if (response.getStatusLine().getStatusCode() == 200) {
+			System.out.println("Login form get: " + response.getStatusLine());
+
+			InputStream is = entity.getContent();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String str = "";
+			strBuild = new StringBuilder();
+			while ((str = br.readLine()) != null) {
+				strBuild.append(str);
+			}
+			is.close();
+			br.close();
+
+			// 将字符串解析为html文档
+			Document doc = Jsoup.parse(strBuild.toString());
+
+			// 获取img标签
+			Elements es = doc.getElementsByTag("div");
+			int j = 0;
+			// 获取没一个img标签src的内容，也就是图片地址
+			for (Iterator<Element> i = es.iterator(); i.hasNext();) {
+				Element e = i.next();
+				String r = e.attr("class");
+				if (RegexUtil.validateSting(r, "alert_info")) {
+					j++;
+					String message = e.text();
+					if (message.indexOf(getUserName()) >= 0) {
+						logger.info("Login sucess!");
+					} else {
+						logger.info(message);
+						throw new Exception("Login failed!");
+					}
+					break;
+				}
+			}
+			if (j == 0) {
+				throw new Exception("Login failed!");
+			}
+			// 必须要对entity进行处理，否则用同一个httpClient访问其他地址时，会抛出异常。这里是销毁返回的content
+			if (entity != null) {
+				EntityUtils.consume(entity);
+			}
+			System.out.println(strBuild.toString());
+
+			return client.getCookieStore();
+		} else {
+			return null;
+		}
+
 	}
-
 }
