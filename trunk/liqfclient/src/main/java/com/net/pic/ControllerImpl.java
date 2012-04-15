@@ -49,28 +49,31 @@ public class ControllerImpl implements Controller {
 
 	public List<File> fetchImages(String pageUrl, String imgSaveDir)
 			throws MalformedURLException, IOException {
-		HttpClientUrl clintUrl = new HttpClientUrl(loginUrl, userName,
+		HttpClientUrl clintUrl = new HttpClientUrl(siteUrl, loginUrl, userName,
 				password, null);
 		// 获取html页面
 		StringBuffer page = fetcher.fetchHtml(pageUrl, clintUrl);
 
-		// 获取页面中的地址
-		Set<String> imgUrls = hander.getImageUrls(page);
+		// 获取
+		Set<String> linkUrls = hander.getImageUrls(page);
 
 		// 并发执行
-		if (imgUrls.size() <= 0) {
+		if (linkUrls.size() <= 0) {
 			// 获取该页面下面所有图片链接的地址
 			Set<String> urlStrs = urlHander.getUrls(page);
 			int threadNum = urlStrs.size();
+			if(threadNum <= 0) {
+				throw new MalformedURLException("Don't get image urls!");
+				
+			}
 			// 初始化countDown
 			CountDownLatch threadSignal = new CountDownLatch(threadNum);
 			// 创建固定长度的线程池
 			ExecutorService executor = Executors.newFixedThreadPool(50);
 			for (String tempUrl : urlStrs) { // 开threadNum个线程
-				HttpClientUrl clintUrlTemp = new HttpClientUrl();
-				clintUrlTemp.setCookieArr(clintUrl.getCookieArr());
+				HttpClientUrl clintUrlTemp = new HttpClientUrl(clintUrl.getCookiestore());
 				Runnable task = new TaskThread(siteUrl + tempUrl, clintUrlTemp,
-						threadSignal, fetcher, hander, imgUrls);
+						threadSignal, fetcher, hander, linkUrls);
 				executor.execute(task);
 			}
 			try {
@@ -87,7 +90,7 @@ public class ControllerImpl implements Controller {
 		List<File> fileList = new ArrayList<File>();
 		// 需要下载的文件对象列表
 		List<FileBean> fileBeanList = new ArrayList<FileBean>();
-		for (String tempUrl : imgUrls) { // 开threadNum个线程
+		for (String tempUrl : linkUrls) { // 开threadNum个线程
 			FileBean fileBean = new FileBean();
 			fileBean.setFileName(tempUrl);
 			fileBeanList.add(fileBean);
@@ -161,23 +164,23 @@ public class ControllerImpl implements Controller {
 		}
 		// login url
 		if (loginUrl == null || loginUrl.length() <= 0) {
-			loginUrl = siteUrl + "logging.php?action=login";
+			loginUrl = "logging.php?action=login";
 		}
 		if (password == null || password.length() <= 0) {
 			password = "790521";
 		}
 		if (userName == null || userName.length() <= 0) {
-			userName = "scholers";
+			userName = "scholerscn";
 		}
 
 		// output dir
 		if (fileDir == null || fileDir.length() <= 0) {
-			fileDir = "d://pic4//";
+			fileDir = "d://pic//";
 		}
 		Controller controller = new ControllerImpl(siteUrl, loginUrl, userName,
 				password);
 		if (testUrl == null || testUrl.length() <= 0) {
-			testUrl = siteUrl + "forum-25-1.html";
+			testUrl = siteUrl + "forum-25-2.html";
 		}
 		String testUrl2 = siteUrl + "forum-784-2.html";
 		String testUrl3 = siteUrl + "forum-881-2.html";
@@ -195,10 +198,10 @@ public class ControllerImpl implements Controller {
 
 			// for(int i = 0; i < 9; i ++) {
 			// testUrl = siteUrl + "forum-25-" + 5 + ".html";
-			//controller.fetchImages(testUrl, fileDir);
+			controller.fetchImages(testUrl, fileDir);
 			// controller.fetchImages(testUrl2, fileDir2);
 			//controller.fetchImages(testUrl3, fileDir3);
-			controller.fetchImages(testUrl4, fileDir);
+			//controller.fetchImages(testUrl4, fileDir);
 			// Thread.sleep(5000);
 			// }
 		} catch (MalformedURLException e) {
