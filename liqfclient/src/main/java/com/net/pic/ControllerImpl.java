@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 
 import org.apache.log4j.Logger;
 
+import com.liqf.other.FileAccess;
 import com.net.pic.task.DownPicThread;
 import com.net.pic.task.TaskThread;
 import com.net.pic.ui.HttpClientUrl;
@@ -69,7 +70,7 @@ public class ControllerImpl implements Controller {
 			// 初始化countDown
 			CountDownLatch threadSignal = new CountDownLatch(threadNum);
 			// 创建固定长度的线程池
-			ExecutorService executor = Executors.newFixedThreadPool(50);
+			ExecutorService executor = Executors.newFixedThreadPool(30);
 			for (String tempUrl : urlStrs) { // 开threadNum个线程
 				HttpClientUrl clintUrlTemp = new HttpClientUrl(clintUrl.getCookiestore());
 				Runnable task = new TaskThread(siteUrl + tempUrl, clintUrlTemp,
@@ -148,6 +149,7 @@ public class ControllerImpl implements Controller {
 		String testUrl = null;
 		String fileDir2 = null;
 		String fileDir3 = null;
+		String pageNum = "3";
 		if (args != null && args.length > 0) {
 			siteUrl = args[0];
 			loginUrl = args[1];
@@ -170,28 +172,28 @@ public class ControllerImpl implements Controller {
 			password = "790521";
 		}
 		if (userName == null || userName.length() <= 0) {
-			userName = "scholerscn";
+			userName = "scholers";
 		}
 
 		// output dir
 		if (fileDir == null || fileDir.length() <= 0) {
-			fileDir = "d://pic//";
+			fileDir = "d://testpic//pic//";
 		}
 		Controller controller = new ControllerImpl(siteUrl, loginUrl, userName,
 				password);
 		if (testUrl == null || testUrl.length() <= 0) {
-			testUrl = siteUrl + "forum-25-2.html";
+			testUrl = siteUrl + "forum-25-" + pageNum +".html";
 		}
-		String testUrl2 = siteUrl + "forum-784-2.html";
-		String testUrl3 = siteUrl + "forum-881-2.html";
-		String testUrl4 = siteUrl + "forum-300-5.html";
+		String testUrl2 = siteUrl + "forum-784-" + pageNum + ".html";
+		String testUrl3 = siteUrl + "forum-881-" + pageNum + ".html";
+		String testUrl4 = siteUrl + "forum-300-" + pageNum + ".html";
 
 		if (fileDir2 == null || fileDir2.length() <= 0) {
-			fileDir2 = "d://pic0//";
+			fileDir2 = "d://testpic//pic0//";
 		}
 
 		if (fileDir3 == null || fileDir3.length() <= 0) {
-			fileDir3 = "d://pic1//";
+			fileDir3 = "d://testpic//pic1//";
 		}
 		// 二级解析
 		try {
@@ -199,9 +201,9 @@ public class ControllerImpl implements Controller {
 			// for(int i = 0; i < 9; i ++) {
 			// testUrl = siteUrl + "forum-25-" + 5 + ".html";
 			controller.fetchImages(testUrl, fileDir);
-			// controller.fetchImages(testUrl2, fileDir2);
-			//controller.fetchImages(testUrl3, fileDir3);
-			//controller.fetchImages(testUrl4, fileDir);
+			controller.fetchImages(testUrl2, fileDir2);
+			controller.fetchImages(testUrl3, fileDir3);
+			controller.fetchImages(testUrl4, fileDir);
 			// Thread.sleep(5000);
 			// }
 		} catch (MalformedURLException e) {
@@ -212,6 +214,9 @@ public class ControllerImpl implements Controller {
 			e.printStackTrace();
 
 		}
+		
+		//文件转移操作，每个文件夹只保留1000个文件
+		//FileAccess.batchMove(fileDir, fileDir + "/pic1", 1000);
 	}
 
 }
