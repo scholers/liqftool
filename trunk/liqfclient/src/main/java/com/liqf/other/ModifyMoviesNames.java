@@ -85,7 +85,8 @@ public class ModifyMoviesNames {
 		//readFile("F:\\movies");
 		//movePics("C:\\TDDownload\\other\\others","E:\\My Documents\\My Webs\\sex\\pic18");
 		//movePics("E:\\My Documents\\My Webs\\sex\\pic18","E:\\My Documents\\My Webs\\sex\\pic17");
-		movePics("E:\\My Documents\\My Webs\\sex","E:\\My Documents\\My Webs\\sex\\pic18", 1000);
+		//movePics("E:\\My Documents\\My Webs\\sex","E:\\My Documents\\My Webs\\sex\\pic18", 1000);
+		movePics("d:\\", "d:\\pic" + "\\pic1", 1000);
 	}
 
 }
