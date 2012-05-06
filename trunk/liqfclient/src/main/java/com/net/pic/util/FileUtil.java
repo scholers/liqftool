@@ -59,7 +59,16 @@ public class FileUtil {
 		}
 	}
 	
-	public static void copyUrlToFile(URL source, String filePath, String fileName) throws IOException {
+	/**
+	 * 
+	 * @param source
+	 * @param filePath
+	 * @param fileName
+	 * @throws IOException
+	 * @throws MalformedURLException
+	 */
+	public static void copyUrlToFile(URL source, String filePath, String fileName) 
+			throws IOException,MalformedURLException {
 		OutputStream fos = null;
 		try {
 			java.io.File myFilePath = new java.io.File(filePath);
@@ -68,9 +77,9 @@ public class FileUtil {
 			}
 			File writeFile = new File(filePath + fileName);
 			FileUtils.copyURLToFile(source, writeFile);
-			
+/*			
 		} catch (MalformedURLException e) {
-			logger.error(e.fillInStackTrace());
+			logger.error(e.fillInStackTrace());*/
 		} finally {
 			if(fos != null) {
 				fos.close();
