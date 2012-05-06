@@ -4,17 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
 
 import javax.swing.JTextArea;
 
 import org.apache.log4j.Logger;
 
-import com.liqf.other.FileAccess;
+import com.net.pic.task.DownPicTask;
 import com.net.pic.task.DownPicThread;
 import com.net.pic.task.TaskThread;
 import com.net.pic.ui.HttpClientUrl;
@@ -63,16 +67,17 @@ public class ControllerImpl implements Controller {
 			// 获取该页面下面所有图片链接的地址
 			Set<String> urlStrs = urlHander.getUrls(page);
 			int threadNum = urlStrs.size();
-			if(threadNum <= 0) {
+			if (threadNum <= 0) {
 				throw new MalformedURLException("Don't get image urls!");
-				
+
 			}
 			// 初始化countDown
 			CountDownLatch threadSignal = new CountDownLatch(threadNum);
 			// 创建固定长度的线程池
 			ExecutorService executor = Executors.newFixedThreadPool(30);
 			for (String tempUrl : urlStrs) { // 开threadNum个线程
-				HttpClientUrl clintUrlTemp = new HttpClientUrl(clintUrl.getCookiestore());
+				HttpClientUrl clintUrlTemp = new HttpClientUrl(
+						clintUrl.getCookiestore());
 				Runnable task = new TaskThread(siteUrl + tempUrl, clintUrlTemp,
 						threadSignal, fetcher, hander, linkUrls);
 				executor.execute(task);
@@ -91,42 +96,78 @@ public class ControllerImpl implements Controller {
 		List<File> fileList = new ArrayList<File>();
 		// 需要下载的文件对象列表
 		List<FileBean> fileBeanList = new ArrayList<FileBean>();
+		Map<String, FileBean> fileMap = new HashMap<String, FileBean>();
 		for (String tempUrl : linkUrls) { // 开threadNum个线程
 			FileBean fileBean = new FileBean();
 			fileBean.setFileName(tempUrl);
 			fileBeanList.add(fileBean);
+			fileMap.put(tempUrl, fileBean);
 		}
 
 		int threadNum = fileBeanList.size();
 		// 输出到文件
-		if (threadNum > 0) {
-			FileUtil.toFile(fileBeanList, imgSaveDir, "fileList.txt");
-		}
+		/*
+		 * if (threadNum > 0) { FileUtil.toFile(fileBeanList, imgSaveDir,
+		 * "fileList.txt"); }
+		 */
 
 		threadNum = fileBeanList.size();
 		// 初始化countDown
 		CountDownLatch threadSignal = new CountDownLatch(threadNum);
 		// 创建固定长度的线程池
 		ExecutorService executor = Executors.newFixedThreadPool(50);
-		int i = 0;
+		/*
+		 * for (FileBean fileBean : fileBeanList) { // 开threadNum个线程 String
+		 * newFileName = fileBean.getFileName().substring(
+		 * fileBean.getFileName().lastIndexOf("/") + 1,
+		 * fileBean.getFileName().length()); Runnable task = new
+		 * DownPicThread(fileBean.getFileName(), newFileName, imgSaveDir,
+		 * threadSignal, messageArea); executor.execute(task); i++; } try {
+		 * threadSignal.await(); } catch (InterruptedException e) { // TODO
+		 * Auto-generated catch block logger.error(e.fillInStackTrace()); } //
+		 * 等待所有子线程执行完
+		 */
+		List<FutureTask<Object>> listObj = new ArrayList<FutureTask<Object>>();
 		for (FileBean fileBean : fileBeanList) { // 开threadNum个线程
 			String newFileName = fileBean.getFileName().substring(
 					fileBean.getFileName().lastIndexOf("/") + 1,
 					fileBean.getFileName().length());
-			Runnable task = new DownPicThread(fileBean.getFileName(),
-					newFileName, imgSaveDir, threadSignal, messageArea);
-			executor.execute(task);
-			i++;
+			FutureTask<Object> ft = new FutureTask<Object>(new DownPicTask(
+					fileBean.getFileName(), newFileName, imgSaveDir,
+					threadSignal, messageArea));
+			listObj.add(ft);
+			executor.submit(ft);
 		}
-		try {
-			threadSignal.await();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			logger.equals(e.fillInStackTrace());
-		} // 等待所有子线程执行完
-			// do work
-			// finish thread
+		int i = 0;
+		// 下载成功的文件
+		List<FileBean> fileBeanListSuc = new ArrayList<FileBean>();
+		for (FutureTask<Object> tempFt : listObj) {
+			try {
+				Map<String, Boolean> tempMap = (HashMap<String, Boolean>) tempFt
+						.get();
+				for (Map.Entry<String, Boolean> temp : tempMap.entrySet()) {
+					String picUrlStr = temp.getKey();
+					if (fileMap.containsKey(picUrlStr)
+							&& temp.getValue().booleanValue() == true) {
+						fileBeanListSuc.add(fileMap.get(picUrlStr));
+						i++;
+					}
+				}
+			} catch (InterruptedException e) {
+				logger.error(e.fillInStackTrace());
+			} catch (ExecutionException e) {
+				logger.error(e.fillInStackTrace());
+			}
+		}
+
+		// do work
+		// finish thread
 		executor.shutdown();
+
+		// 输出到文件
+		if (fileBeanListSuc.size() > 0) {
+			FileUtil.toFile(fileBeanListSuc, imgSaveDir, "fileList.txt");
+		}
 		if (messageArea != null) {
 			messageArea.setText(messageArea.getText() + "/n" + " 任务完成，共下载" + i
 					+ "个图片!");
@@ -149,7 +190,7 @@ public class ControllerImpl implements Controller {
 		String testUrl = null;
 		String fileDir2 = null;
 		String fileDir3 = null;
-		String pageNum = "3";
+		String pageNum = "1";
 		if (args != null && args.length > 0) {
 			siteUrl = args[0];
 			loginUrl = args[1];
@@ -159,6 +200,7 @@ public class ControllerImpl implements Controller {
 			testUrl = args[5];
 			fileDir2 = args[6];
 			fileDir3 = args[7];
+			pageNum = args[8];
 		}
 		if (siteUrl == null || siteUrl.length() <= 0) {
 			// defaule site url
@@ -177,15 +219,16 @@ public class ControllerImpl implements Controller {
 
 		// output dir
 		if (fileDir == null || fileDir.length() <= 0) {
-			fileDir = "d://testpic//pic//";
+			fileDir = "d://testpic//pic8//";
 		}
 		Controller controller = new ControllerImpl(siteUrl, loginUrl, userName,
 				password);
 		if (testUrl == null || testUrl.length() <= 0) {
-			testUrl = siteUrl + "forum-25-" + pageNum +".html";
+			testUrl = siteUrl + "forum-25-" + pageNum + ".html";
 		}
-		String testUrl2 = siteUrl + "forum-784-" + pageNum + ".html";
-		String testUrl3 = siteUrl + "forum-881-" + pageNum + ".html";
+		String testUrl2 = siteUrl + "forum-790-" + pageNum + ".html";
+		// --经典原创
+		String testUrl3 = siteUrl + "forum-882-" + pageNum + ".html";
 		String testUrl4 = siteUrl + "forum-300-" + pageNum + ".html";
 
 		if (fileDir2 == null || fileDir2.length() <= 0) {
@@ -201,22 +244,22 @@ public class ControllerImpl implements Controller {
 			// for(int i = 0; i < 9; i ++) {
 			// testUrl = siteUrl + "forum-25-" + 5 + ".html";
 			controller.fetchImages(testUrl, fileDir);
-			controller.fetchImages(testUrl2, fileDir2);
-			controller.fetchImages(testUrl3, fileDir3);
+			// controller.fetchImages(testUrl2, fileDir2);
+			// controller.fetchImages(testUrl3, fileDir3);
 			controller.fetchImages(testUrl4, fileDir);
 			// Thread.sleep(5000);
 			// }
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.fillInStackTrace());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.fillInStackTrace());
 
 		}
-		
-		//文件转移操作，每个文件夹只保留1000个文件
-		//FileAccess.batchMove(fileDir, fileDir + "/pic1", 1000);
+
+		// 文件转移操作，每个文件夹只保留1000个文件
+		// FileAccess.batchMove(fileDir, fileDir + "/pic1", 1000);
 	}
 
 }
