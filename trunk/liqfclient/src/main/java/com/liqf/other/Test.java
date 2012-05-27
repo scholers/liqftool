@@ -82,7 +82,44 @@ public class Test {
 		}
 	}
 	
+	public float getOption(){
+		float total = 5000.00f;
+		float optionValue = 6.50f;
+		float curValue = 13.50f;
+		float slary = 16000.00f;
+		float huilv = 6.3f;
+		//总收入
+		float getOptionValue = (curValue - optionValue) * total * huilv + slary;
+		//行权成本
+		float allSend = optionValue * total * huilv + computeTax(getOptionValue);
+		return allSend;
+	}
 	
+	public float computeTax(float income)    //income为工资
+    {
+        float f_income=income-3500;    //起征基数为3500，同时也可以参数化处理
+        float[] tax_line={0f,1500f,4500f,9000f,35000f,55000f,80000f};//计算个人所得税的档次（假设员工为中国国籍，因为国籍不同起征点数不同，税率不同。）
+        float[] tax_rate={0.03f,0.10f,0.20f,0.25f,0.30f,0.35f,0.40f};      //各档次税率
+        float[] tax_sub={0.f,105f,555f,1005f,2755f,5505f,13505f};    //采用了简化算法
+        int i_tax_level=0;    //为了计算简便，把工资进行分档
+        while(i_tax_level<tax_line.length &&  f_income>tax_line[i_tax_level] )
+        {
+            i_tax_level ++;
+        };
+       
+        if(i_tax_level>0)
+        {
+        	 if(i_tax_level >= tax_line.length) {
+        		 i_tax_level = i_tax_level - 1;
+        	 }
+            float f_tax=tax_sub[i_tax_level-1]+(f_income-tax_line[i_tax_level-1])*tax_rate[i_tax_level];    //算税的公式
+            return f_tax;
+        }
+        else
+        {
+            return 0f;
+        }
+    }
 
 	/**
 	 * @param args
@@ -95,7 +132,8 @@ public class Test {
 		//t.testArr();
 		//t.testStr();
 		//System.out.println(testStr);
-		t.testListBean();
+		//t.testListBean();
+		System.out.println(t.getOption());
 	}
 
 }

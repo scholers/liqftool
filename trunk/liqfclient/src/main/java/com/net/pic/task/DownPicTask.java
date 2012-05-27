@@ -64,7 +64,7 @@ public class DownPicTask implements Callable<Object> {
 		} catch (IOException e) {
 			logger.error("обтьнд╪Ч" + this.saveFileName + "й╖╟э" + e.fillInStackTrace());
 			this.setDownload(false);
-		} 
+		}
 		Map<String ,Boolean> tempMap = new HashMap<String,Boolean>();
 		tempMap.put(this.saveFileName, Boolean.valueOf(this.isDownload()));
 		return tempMap;

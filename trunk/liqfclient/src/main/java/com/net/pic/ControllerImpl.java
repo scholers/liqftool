@@ -13,19 +13,25 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.swing.JTextArea;
 
 import org.apache.log4j.Logger;
 
 import com.net.pic.task.DownPicTask;
-import com.net.pic.task.DownPicThread;
 import com.net.pic.task.TaskThread;
 import com.net.pic.ui.HttpClientUrl;
 import com.net.pic.ui.MainWin;
 import com.net.pic.util.FileBean;
 import com.net.pic.util.FileUtil;
 
+/**
+ * 
+ * @author weique.lqf
+ *
+ */
 public class ControllerImpl implements Controller {
 	private static Logger logger = Logger.getLogger(ControllerImpl.class);
 	private MainWin mainWin;
@@ -74,7 +80,7 @@ public class ControllerImpl implements Controller {
 			// 初始化countDown
 			CountDownLatch threadSignal = new CountDownLatch(threadNum);
 			// 创建固定长度的线程池
-			ExecutorService executor = Executors.newFixedThreadPool(30);
+			ExecutorService executor = Executors.newFixedThreadPool(20);
 			for (String tempUrl : urlStrs) { // 开threadNum个线程
 				HttpClientUrl clintUrlTemp = new HttpClientUrl(
 						clintUrl.getCookiestore());
@@ -106,16 +112,16 @@ public class ControllerImpl implements Controller {
 
 		int threadNum = fileBeanList.size();
 		// 输出到文件
-		/*
-		 * if (threadNum > 0) { FileUtil.toFile(fileBeanList, imgSaveDir,
-		 * "fileList.txt"); }
-		 */
+		// 输出到文件
+		if (threadNum > 0) {
+			FileUtil.toFile(fileBeanList, imgSaveDir, "fileList.txt");
+		}
 
-		threadNum = fileBeanList.size();
+		
 		// 初始化countDown
 		CountDownLatch threadSignal = new CountDownLatch(threadNum);
 		// 创建固定长度的线程池
-		ExecutorService executor = Executors.newFixedThreadPool(50);
+		ExecutorService executor = Executors.newFixedThreadPool(30);
 		/*
 		 * for (FileBean fileBean : fileBeanList) { // 开threadNum个线程 String
 		 * newFileName = fileBean.getFileName().substring(
@@ -142,9 +148,19 @@ public class ControllerImpl implements Controller {
 		// 下载成功的文件
 		List<FileBean> fileBeanListSuc = new ArrayList<FileBean>();
 		for (FutureTask<Object> tempFt : listObj) {
+			Map<String, Boolean> tempMap = new HashMap<String,Boolean>();
 			try {
-				Map<String, Boolean> tempMap = (HashMap<String, Boolean>) tempFt
-						.get();
+				
+				tempMap = (HashMap<String, Boolean>) tempFt
+						.get(10, TimeUnit.SECONDS);
+				
+			} catch (InterruptedException e) {
+				logger.error(e.fillInStackTrace());
+			} catch (ExecutionException e) {
+				logger.error(e.fillInStackTrace());
+			} catch (TimeoutException e) {
+				logger.error(e.fillInStackTrace());
+			} finally {
 				for (Map.Entry<String, Boolean> temp : tempMap.entrySet()) {
 					String picUrlStr = temp.getKey();
 					if (fileMap.containsKey(picUrlStr)
@@ -153,20 +169,16 @@ public class ControllerImpl implements Controller {
 						i++;
 					}
 				}
-			} catch (InterruptedException e) {
-				logger.error(e.fillInStackTrace());
-			} catch (ExecutionException e) {
-				logger.error(e.fillInStackTrace());
 			}
+			
 		}
 
 		// do work
 		// finish thread
 		executor.shutdown();
 
-		// 输出到文件
 		if (fileBeanListSuc.size() > 0) {
-			FileUtil.toFile(fileBeanListSuc, imgSaveDir, "fileList.txt");
+			FileUtil.toFile(fileBeanListSuc, imgSaveDir, "failBeanSucc.txt");
 		}
 		if (messageArea != null) {
 			messageArea.setText(messageArea.getText() + "/n" + " 任务完成，共下载" + i
@@ -190,7 +202,7 @@ public class ControllerImpl implements Controller {
 		String testUrl = null;
 		String fileDir2 = null;
 		String fileDir3 = null;
-		String pageNum = "1";
+		String pageNum = "3";
 		if (args != null && args.length > 0) {
 			siteUrl = args[0];
 			loginUrl = args[1];
@@ -219,7 +231,7 @@ public class ControllerImpl implements Controller {
 
 		// output dir
 		if (fileDir == null || fileDir.length() <= 0) {
-			fileDir = "d://testpic//pic8//";
+			fileDir = "d://testpic//pic1//";
 		}
 		Controller controller = new ControllerImpl(siteUrl, loginUrl, userName,
 				password);
@@ -244,8 +256,8 @@ public class ControllerImpl implements Controller {
 			// for(int i = 0; i < 9; i ++) {
 			// testUrl = siteUrl + "forum-25-" + 5 + ".html";
 			controller.fetchImages(testUrl, fileDir);
-			// controller.fetchImages(testUrl2, fileDir2);
-			// controller.fetchImages(testUrl3, fileDir3);
+			//controller.fetchImages(testUrl2, fileDir2);
+			//controller.fetchImages(testUrl3, fileDir3);
 			controller.fetchImages(testUrl4, fileDir);
 			// Thread.sleep(5000);
 			// }
