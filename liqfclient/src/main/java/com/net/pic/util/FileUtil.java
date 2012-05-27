@@ -77,9 +77,9 @@ public class FileUtil {
 			}
 			File writeFile = new File(filePath + fileName);
 			FileUtils.copyURLToFile(source, writeFile);
-/*			
-		} catch (MalformedURLException e) {
-			logger.error(e.fillInStackTrace());*/
+			
+		} catch (IOException e) {
+			logger.error(e.fillInStackTrace());
 		} finally {
 			if(fos != null) {
 				fos.close();
