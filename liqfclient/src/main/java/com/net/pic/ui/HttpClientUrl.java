@@ -182,6 +182,9 @@ public class HttpClientUrl {
 			is.close();
 		}
 		int pos = strBuild.indexOf("name=\"formhash\" value=");
+		if(pos < 0) {
+			throw new Exception("Get formhash failed!!!");
+		}
 		// 找出这个 formhash 的内容，这是登录用的 formhash
 		String loginFormhash = strBuild.substring(pos + 23, pos + 23 + 8);
 		System.out.println(loginFormhash);
