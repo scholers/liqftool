@@ -91,10 +91,10 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-		</dependency>
+<dependency>
+	<groupId>org.apache.poi</groupId>
+	<artifactId>poi-ooxml</artifactId>
+</dependency>
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
@@ -151,6 +151,10 @@
 <dependency>
 	<groupId>commons-io</groupId>
 	<artifactId>commons-io</artifactId>
+</dependency>
+<dependency>
+	<groupId>org.apache.poi</groupId>
+	<artifactId>ooxml-schemas</artifactId>
 </dependency>
 	</dependencies>
 </project>
