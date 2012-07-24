@@ -112,11 +112,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 				<artifactId>commons-logging</artifactId>
 				<version>1.1.1</version>
 			</dependency>
-			<dependency>
-				<groupId>org.apache.poi</groupId>
-				<artifactId>poi</artifactId>
-				<version>3.6</version>
-			</dependency>
+<dependency>
+	<groupId>org.apache.poi</groupId>
+	<artifactId>poi-ooxml</artifactId>
+	<version>3.8</version>
+</dependency>
 			<dependency>
 				<groupId>net.sf.ehcache</groupId>
 				<artifactId>ehcache-core</artifactId>
@@ -193,6 +193,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<groupId>commons-io</groupId>
 	<artifactId>commons-io</artifactId>
 	<version>1.4</version>
+</dependency>
+<dependency>
+	<groupId>org.apache.poi</groupId>
+	<artifactId>ooxml-schemas</artifactId>
+	<version>1.0</version>
 </dependency>
 		</dependencies>
 
