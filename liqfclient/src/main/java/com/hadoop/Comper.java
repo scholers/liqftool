@@ -11,12 +11,16 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.SequenceFile;
+
 import org.apache.hadoop.io.compress.CompressionCodec;
 import org.apache.hadoop.io.compress.CompressionCodecFactory;
 import org.apache.hadoop.io.compress.CompressionInputStream;
 
-
+/**
+ * 读取本地的HADOOP文件，然后解析成文本
+ * @author weique.lqf
+ *
+ */
 public class Comper {
 	
 	private static FileSystem fs = null;
