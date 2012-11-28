@@ -120,6 +120,33 @@ public class Test {
             return 0f;
         }
     }
+	
+	public void testMod(int size, int dftNum) {
+		int num = size/dftNum;
+		int modNum = size%dftNum;
+		if(modNum > 0) {
+			num += 1;
+		}
+		System.out.println(num);
+	}
+	
+	public void testSublist() {  
+	    List<Object> lists = new ArrayList<Object>();  
+	  
+	    lists.add("1");  
+	    lists.add("2");  
+	    lists.add("3");  
+	    lists.add("4");  
+	  
+	    //注意这里是和本文顶部的代码不同的....  
+	    List<Object> tempList = new ArrayList<Object>(lists.subList(2, lists.size()));  
+	  
+	    //tempList.add("6");  
+	  
+	    System.out.println(tempList); // 1  
+	  
+	    System.out.println(lists); // 2  
+	}  
 
 	/**
 	 * @param args
@@ -128,12 +155,13 @@ public class Test {
 		// TODO Auto-generated method stub
 		String testStr = "2222";
 		Test t = new Test();
+		t.testSublist();
 		//t.changeSql(testStr);
 		//t.testArr();
 		//t.testStr();
 		//System.out.println(testStr);
 		//t.testListBean();
-		System.out.println(t.getOption());
+		//System.out.println(t.testMod());
 	}
 
 }
