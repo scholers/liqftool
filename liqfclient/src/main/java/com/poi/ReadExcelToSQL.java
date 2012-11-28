@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -15,6 +16,14 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.net.pic.util.FileBean;
+import com.net.pic.util.FileUtil;
+ 
+/**
+ * 仅支持excel2007以及以后的版本
+ * @author weique.lqf
+ *
+ */
 public class ReadExcelToSQL {
 	private static Properties p_sql = new Properties();
 	static {
@@ -39,6 +48,7 @@ public class ReadExcelToSQL {
 	 *            导入的数据库表的名称
 	 */
 	public static void readExcel(String fileName, String tableName) {
+		List<FileBean> fileList = new ArrayList<FileBean>();
 		XSSFWorkbook workbook = null;
 		try {
 			workbook = new XSSFWorkbook(new FileInputStream(fileName));
@@ -100,10 +110,19 @@ public class ReadExcelToSQL {
 					columAt++;
 				}
 				String sql = sqlTemp.substring(0, sqlTemp.length() - 1) + ");";
-
+				FileBean fileBean = new FileBean();
+				fileBean.setFileName(sql);
+				fileList.add(fileBean);
 				// 输出sql
 				System.out.println(sql);
 			}
+		}
+		
+		try {
+			FileUtil.toFile(fileList, "d://", "input.txt");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -131,12 +150,12 @@ public class ReadExcelToSQL {
 				return d.longValue() + ",";
 			}
 			if ("string".equals(type)) {
-				return "'" + d.longValue() + "',";
+				return "\"" + d.longValue() + "\",";
 			} else if ("double".equals(type)) {
 				return d + ",";
 			} else if (type.indexOf("string") != -1
 					&& type.indexOf("double") != -1) {
-				return "'" + d + "',";
+				return "\"" + d + "\",";
 			}
 
 			return d.longValue() + ",";
@@ -148,10 +167,10 @@ public class ReadExcelToSQL {
 			if (temp.startsWith("(") && temp.endsWith(")")) {
 				return temp + ",";
 			} else {
-				return "'" + temp + "',";
+				return "\"" + temp + "\",";
 			}
 		case XSSFCell.CELL_TYPE_BOOLEAN:
-			return bool ? "'" + cell.getBooleanCellValue() + "'," : cell
+			return bool ? "\"" + cell.getBooleanCellValue() + "\"," : cell
 					.getBooleanCellValue() + "";
 			// 公式
 		case XSSFCell.CELL_TYPE_FORMULA:
@@ -168,6 +187,6 @@ public class ReadExcelToSQL {
 	}
 
 	public static void main(String[] args) {
-		readExcel("D:\\1.xlsx", "sg_dim_ald_scm");
+		readExcel("D:\\1.xlsx", "sg_dim_main_auc");
 	}
 }

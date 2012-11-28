@@ -80,7 +80,7 @@ public class ControllerImpl implements Controller {
 			// 初始化countDown
 			CountDownLatch threadSignal = new CountDownLatch(threadNum);
 			// 创建固定长度的线程池
-			ExecutorService executor = Executors.newFixedThreadPool(20);
+			ExecutorService executor = Executors.newFixedThreadPool(10);
 			for (String tempUrl : urlStrs) { // 开threadNum个线程
 				HttpClientUrl clintUrlTemp = new HttpClientUrl(
 						clintUrl.getCookiestore());
@@ -121,7 +121,7 @@ public class ControllerImpl implements Controller {
 		// 初始化countDown
 		CountDownLatch threadSignal = new CountDownLatch(threadNum);
 		// 创建固定长度的线程池
-		ExecutorService executor = Executors.newFixedThreadPool(30);
+		ExecutorService executor = Executors.newFixedThreadPool(10);
 		/*
 		 * for (FileBean fileBean : fileBeanList) { // 开threadNum个线程 String
 		 * newFileName = fileBean.getFileName().substring(
@@ -151,8 +151,8 @@ public class ControllerImpl implements Controller {
 			Map<String, Boolean> tempMap = new HashMap<String,Boolean>();
 			try {
 				
-				tempMap = (HashMap<String, Boolean>) tempFt
-						.get(10, TimeUnit.SECONDS);
+				tempMap = ((HashMap<String, Boolean>) tempFt
+						.get(10, TimeUnit.SECONDS));
 				
 			} catch (InterruptedException e) {
 				logger.error(e.fillInStackTrace());
@@ -202,7 +202,7 @@ public class ControllerImpl implements Controller {
 		String testUrl = null;
 		String fileDir2 = null;
 		String fileDir3 = null;
-		String pageNum = "3";
+		String pageNum = "1";
 		if (args != null && args.length > 0) {
 			siteUrl = args[0];
 			loginUrl = args[1];
@@ -216,7 +216,8 @@ public class ControllerImpl implements Controller {
 		}
 		if (siteUrl == null || siteUrl.length() <= 0) {
 			// defaule site url
-			siteUrl = "http://a.xfjiayuan.com/";
+			//http://www.xfjiayuan.com/logging.php?action=login
+			siteUrl = "http://www.xfjiayuan.com/";
 		}
 		// login url
 		if (loginUrl == null || loginUrl.length() <= 0) {
@@ -231,7 +232,7 @@ public class ControllerImpl implements Controller {
 
 		// output dir
 		if (fileDir == null || fileDir.length() <= 0) {
-			fileDir = "d://testpic//pic1//";
+			fileDir = "d://testpic//pic6//";
 		}
 		Controller controller = new ControllerImpl(siteUrl, loginUrl, userName,
 				password);
@@ -256,9 +257,9 @@ public class ControllerImpl implements Controller {
 			// for(int i = 0; i < 9; i ++) {
 			// testUrl = siteUrl + "forum-25-" + 5 + ".html";
 			controller.fetchImages(testUrl, fileDir);
-			//controller.fetchImages(testUrl2, fileDir2);
-			//controller.fetchImages(testUrl3, fileDir3);
-			controller.fetchImages(testUrl4, fileDir);
+			//controller.fetchImages(testUrl2, fileDir);
+			//controller.fetchImages(testUrl3, fileDir);
+			//controller.fetchImages(testUrl4, fileDir);
 			// Thread.sleep(5000);
 			// }
 		} catch (MalformedURLException e) {
@@ -269,6 +270,7 @@ public class ControllerImpl implements Controller {
 			logger.error(e.fillInStackTrace());
 
 		}
+		System.exit(0);
 
 		// 文件转移操作，每个文件夹只保留1000个文件
 		// FileAccess.batchMove(fileDir, fileDir + "/pic1", 1000);
