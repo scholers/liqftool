@@ -10,7 +10,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.cache.TestServiceImpl;
 
-
+/**
+ * 中文
+ * @author weique.lqf
+ *
+ */
 public class SampleServiceTest{
 	@Resource
 	private SampleServiceImpl sampleService = new SampleServiceImpl(new String());

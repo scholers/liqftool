@@ -5,10 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.httpclient.util.DateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -25,6 +29,20 @@ import com.net.pic.util.FileUtil;
  *
  */
 public class ReadExcelToSQL {
+	private Map<String, ZhongjiangAcc> renMap = new HashMap<String, ZhongjiangAcc>();
+	
+	public ReadExcelToSQL(boolean isInit) {
+		if(isInit) {
+			renMap = readExcelAccount("D:\\temp\\2.xlsx");
+		}
+	}
+	
+	
+	public Map<String, ZhongjiangAcc> getRenMap() {
+		return renMap;
+	}
+
+
 	private static Properties p_sql = new Properties();
 	static {
 		try {
@@ -37,6 +55,62 @@ public class ReadExcelToSQL {
 			// TODO Auto-generated catch block
 			System.out.println("没有/sqlConfig.properties配置文件。");
 		}
+	}
+	
+	/**
+	 * 主方法
+	 * 
+	 * @param fileName
+	 *            要读取的excel文件的地址
+	 * @param tableName
+	 *            导入的数据库表的名称
+	 */
+	public  Map<String, ZhongjiangAcc> readExcelAccount(String fileName) {
+		
+		XSSFWorkbook workbook = null;
+		try {
+			workbook = new XSSFWorkbook(new FileInputStream(fileName));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// 读取excel中工作簿的总数
+		int workBooks = workbook.getNumberOfSheets();
+		// 循环这个文件所有的工作簿
+		for (int i = 0; i < workBooks; i++) {
+			XSSFSheet sheet = workbook.getSheetAt(i);
+			Iterator<Row> rows = sheet.rowIterator();
+			
+			while (rows.hasNext()) {
+				ZhongjiangAcc zhongjiangAcc = new ZhongjiangAcc();
+				XSSFRow row = (XSSFRow) rows.next();
+				Iterator<Cell> cells = row.cellIterator();
+				int columAt = 0;// 标记列的下标
+				while (cells.hasNext()) {
+					
+					String columTemp = readCellValue2((XSSFCell) cells.next(), true);
+					columTemp = columTemp.replaceAll("\"", "");
+					columTemp = columTemp.replaceAll(",", "");
+					if(columAt == 0) {
+						zhongjiangAcc.setEmployee(columTemp);
+					}
+					if(columAt == 1) {
+						zhongjiangAcc.setEmail(columTemp);
+					}
+					if(columAt == 2) {
+						zhongjiangAcc.setAccount(columTemp);
+					}
+					columAt++;
+				}
+				//System.out.println(zhongjiangAcc.getAccount().trim());
+				renMap.put(zhongjiangAcc.getAccount().trim(), zhongjiangAcc);
+				
+			}
+		}
+		return renMap;
 	}
 
 	/**
@@ -119,7 +193,8 @@ public class ReadExcelToSQL {
 		}
 		
 		try {
-			FileUtil.toFile(fileList, "d://", "input.txt");
+			String textFileName = "input_" + DateUtil.formatDate(new Date(),"yyyy-MM-dd") + ".txt";
+			FileUtil.toFile(fileList, "d://temp//", textFileName);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -185,8 +260,55 @@ public class ReadExcelToSQL {
 			// break;
 		}
 	}
+	
+	/**
+	 * 取值
+	 * 
+	 * @param cell
+	 *            列
+	 * 
+	 * @param columName
+	 *            此列在数据库中的列名
+	 * @param bool
+	 *            是否根据类型拼接 引号 和 逗号，true 拼接
+	 * @return
+	 */
+	private static String readCellValue2(XSSFCell cell,
+			Boolean bool) {
+		switch (cell.getCellType()) {
+		case XSSFCell.CELL_TYPE_NUMERIC:
+			Double d = cell.getNumericCellValue();
+			
+			return d.longValue() + ",";
+		case XSSFCell.CELL_TYPE_STRING:
+			String temp = cell.getStringCellValue().replace(" ", "");
+			if (!bool) {
+				return temp;
+			}
+			if (temp.startsWith("(") && temp.endsWith(")")) {
+				return temp + ",";
+			} else {
+				return "\"" + temp + "\",";
+			}
+		case XSSFCell.CELL_TYPE_BOOLEAN:
+			return bool ? "\"" + cell.getBooleanCellValue() + "\"," : cell
+					.getBooleanCellValue() + "";
+			// 公式
+		case XSSFCell.CELL_TYPE_FORMULA:
+			throw new RuntimeException("暂不支持公式！" + cell.getCellFormula());
+			// break;
+			// 未知类型
+		case XSSFCell.CELL_TYPE_BLANK:
+			return bool ? "''," : "";
+		default:
+			throw new RuntimeException("未知的类型！" + cell.getCellType());
+			// System.out.println("unsuported sell type");
+			// break;
+		}
+	}
 
 	public static void main(String[] args) {
-		readExcel("D:\\1.xlsx", "sg_dim_main_auc");
+		//readExcel("D:\\temp\\2.xlsx", "employee_alipay");
+		new ReadExcelToSQL(true);
 	}
 }

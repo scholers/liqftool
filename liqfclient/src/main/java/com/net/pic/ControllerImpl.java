@@ -232,7 +232,7 @@ public class ControllerImpl implements Controller {
 
 		// output dir
 		if (fileDir == null || fileDir.length() <= 0) {
-			fileDir = "d://testpic//pic6//";
+			fileDir = "d://testpic//pic8//";
 		}
 		Controller controller = new ControllerImpl(siteUrl, loginUrl, userName,
 				password);
