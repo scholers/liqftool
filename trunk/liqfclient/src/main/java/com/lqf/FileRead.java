@@ -89,7 +89,7 @@ public class FileRead {
         switch (sw) {
         case 1: // 测试读
         {
-            InputStream is = new FileInputStream("D:\\test.txt");
+            InputStream is = new FileInputStream("d:\\temp\\3.txt");
             StringBuffer buffer = new StringBuffer();
             test.readToBuffer(buffer, is);
             System.out.println(buffer);     // 将读到 buffer 中的内容写出来
@@ -104,7 +104,7 @@ public class FileRead {
         }
         case 3: // 测试拷贝
         {
-            test.copyTextFile("E:\\test.txt", "E:\\r.txt");
+            test.copyTextFile("d:\\temp\\3.txt", "E:\\r.txt");
         }
             break;
         }
