@@ -11,6 +11,13 @@ public class ZhongjiangAcc {
 	String employee = null;
 	String email = null;
 	String goods = null;
+	String name = null;
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
 	public String getEmployee() {
 		return employee;
 	}
@@ -41,4 +48,6 @@ public class ZhongjiangAcc {
 	public void setAccount(String account) {
 		Account = account;
 	}
+	
+	//("d:\\temp\\" + strDate + ".txt", strDate);
 }
