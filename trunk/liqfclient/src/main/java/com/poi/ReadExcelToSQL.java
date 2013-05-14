@@ -36,7 +36,9 @@ public class ReadExcelToSQL {
 			renMap = readExcelAccount("D:\\temp\\2.xlsx");
 		}
 	}
-	
+	public ReadExcelToSQL() {
+		
+	}
 	
 	public Map<String, ZhongjiangAcc> getRenMap() {
 		return renMap;
@@ -111,6 +113,71 @@ public class ReadExcelToSQL {
 			}
 		}
 		return renMap;
+	}
+	
+	
+	/**
+	 * 主方法
+	 * 
+	 * @param fileName
+	 *            要读取的excel文件的地址
+	 * @param tableName
+	 *            导入的数据库表的名称
+	 */
+	public  void readExcelAccount2(String fileName) {
+		
+		XSSFWorkbook workbook = null;
+		try {
+			workbook = new XSSFWorkbook(new FileInputStream(fileName));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		// 读取excel中工作簿的总数
+		int workBooks = workbook.getNumberOfSheets();
+		
+		// 循环这个文件所有的工作簿
+		for (int i = 0; i < workBooks; i++) {
+			XSSFSheet sheet = workbook.getSheetAt(i);
+			Iterator<Row> rows = sheet.rowIterator();
+			
+			while (rows.hasNext()) {
+				StringBuilder strBuild = new StringBuilder("<li class=\"clearfix\">\n");
+				ZhongjiangAcc zhongjiangAcc = new ZhongjiangAcc();
+				XSSFRow row = (XSSFRow) rows.next();
+				Iterator<Cell> cells = row.cellIterator();
+				int columAt = 0;// 标记列的下标
+				while (cells.hasNext()) {
+					
+					String columTemp = readCellValue2((XSSFCell) cells.next(), true);
+					columTemp = columTemp.replaceAll("\"", "");
+					columTemp = columTemp.replaceAll(",", "");
+					if(columAt == 1) {
+						zhongjiangAcc.setName(columTemp);
+						strBuild.append("<span class=\"u-nick\">"+columTemp+"</span>\n");
+					}
+					if(columAt == 2) {
+						zhongjiangAcc.setDate(columTemp);
+						strBuild.append("<span class=\"u-time\">中奖"+columTemp+"次</span>\n");
+					}
+					if(columAt == 3) {
+						zhongjiangAcc.setGoods(columTemp);
+						strBuild.append("<span class=\"u-getnum\">获得"+columTemp+"积分宝</span>\n");
+					}
+					columAt++;
+				}
+				
+				
+				
+				//renMap.put(zhongjiangAcc.getAccount().trim(), zhongjiangAcc);
+				strBuild.append("</li>\n");
+				System.out.println(strBuild.toString());
+			}
+		}
+		
 	}
 
 	/**
@@ -310,5 +377,8 @@ public class ReadExcelToSQL {
 	public static void main(String[] args) {
 		//readExcel("D:\\temp\\2.xlsx", "employee_alipay");
 		new ReadExcelToSQL(true);
+		ReadExcelToSQL test = new ReadExcelToSQL();
+		test.readExcelAccount2("D:\\temp\\6.xlsx");
+		//new "D:\\temp\\2.xlsx";
 	}
 }

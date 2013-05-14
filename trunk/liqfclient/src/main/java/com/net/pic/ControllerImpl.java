@@ -202,7 +202,7 @@ public class ControllerImpl implements Controller {
 		String testUrl = null;
 		String fileDir2 = null;
 		String fileDir3 = null;
-		String pageNum = "1";
+		String pageNum = "3";
 		if (args != null && args.length > 0) {
 			siteUrl = args[0];
 			loginUrl = args[1];
@@ -232,7 +232,7 @@ public class ControllerImpl implements Controller {
 
 		// output dir
 		if (fileDir == null || fileDir.length() <= 0) {
-			fileDir = "d://testpic//pic8//";
+			fileDir = "d://testpic//pic9//";
 		}
 		Controller controller = new ControllerImpl(siteUrl, loginUrl, userName,
 				password);
