@@ -140,21 +140,44 @@
 			<groupId>com.google.code.findbugs</groupId>
 			<artifactId>findbugs</artifactId>
 		</dependency>
-<dependency>
-	<groupId>org.apache.httpcomponents</groupId>
-	<artifactId>httpclient</artifactId>
-</dependency>
-<dependency>
-	<groupId>org.jsoup</groupId>
-	<artifactId>jsoup</artifactId>
-</dependency>
-<dependency>
-	<groupId>commons-io</groupId>
-	<artifactId>commons-io</artifactId>
-</dependency>
-<dependency>
-	<groupId>org.apache.poi</groupId>
-	<artifactId>ooxml-schemas</artifactId>
-</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>ooxml-schemas</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-common</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.hive</groupId>
+			<artifactId>hive-exec</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-core</artifactId>
+		</dependency>
+			<dependency>  
+		<groupId>org.slf4j</groupId>  
+		<artifactId>slf4j-api</artifactId>    
+	</dependency>  
+<dependency>  
+    <groupId>org.slf4j</groupId>  
+    <artifactId>slf4j-log4j12</artifactId>  
+</dependency>  
 	</dependencies>
 </project>

@@ -34,7 +34,9 @@
           <value>methodCachePointCutAdvice</value>   
         </list>   
       </property>   
-    </bean>   
+    </bean>
+    
+    <bean id="testServiceTarget2" class="cache.TestServiceImpl2"/>   
 </beans>  
 
 <!-- 

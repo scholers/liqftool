@@ -17,4 +17,28 @@ public class DateUtil {
 		String strDt = df.format(dt);
 		return strDt;
 	}
+	
+	
+	public static String getFormateDate(String inputDate) {
+		return inputDate.substring(0,10);
+	}
+	
+	/**
+	 * 
+	 * @param qs
+	 * @return
+	 */
+	public static String iso2gb(String qs) {  
+	    try {  
+	        if (qs == null)  
+	            return "NULL";  
+	        else {  
+	            return new String(qs.getBytes("GBK"), "utf-8");  
+	        }  
+	    }  
+	    catch (Exception e) {  
+	        System.err.println("iso2gb error・" + e.getMessage());  
+	    }  
+	    return "NULL";  
+	}  
 }

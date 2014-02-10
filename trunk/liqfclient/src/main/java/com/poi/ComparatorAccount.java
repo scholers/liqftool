@@ -8,7 +8,7 @@ public class ComparatorAccount  implements Comparator{
 		 ZhongjiangAcc account0=(ZhongjiangAcc)arg0;
 		 ZhongjiangAcc account1=(ZhongjiangAcc)arg1;
 
-	   //首先比较年龄，如果年龄相同，则比较名字
+	   //首先比较日期，如果日期相同，则比较名字
 
 	  int flag = account0.getDate().compareTo(account1.getDate());
 	  return flag;
