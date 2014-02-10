@@ -20,7 +20,7 @@ REM set CLASSPATH=%BASE_DIR%;%CLASSPATH%
  
 echo %BASE_DIR%
 
-java -classpath %BASE_DIR% com.net.pic.ControllerImpl http://a.xfjiayuan.com/ logging.php?action=login 790521 scholers d://testpic//pic6// http://a.xfjiayuan.com/forum-25-1.html d://testpic//pic7// d://testpic//pic8// 1
+java -classpath %BASE_DIR% com.net.pic.ControllerImpl http://www.test.com/ logging.php?action=login 111111 test d://testpic//pic6// http://a.xfjiayuan.com/forum-25-1.html d://testpic//pic7// d://testpic//pic8// 1
  
 REM @echo on
 REM java -jar lib/down.jar

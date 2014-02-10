@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+   <bean id="helloWorld" class="com.lqf.HelloWorld">
+       <property name="pCCMessage" value="Hello World!"/>
+       <property name="pCCSeqDAO" ref="pCCSeqDAO"/>
+   </bean>
+
+	<bean id="pCCSeqDAO" class = "com.lqf.vo.PCCSeqDAO"/>
+	
+	<bean id="ct" class = "com.proxy.strategy.ContextSpring"> 
+		<property name="stg" ref="writeStg"/>
+	</bean>
+	<bean id="writeStg" class = "com.proxy.strategy.impl.WriteStrategy"/>
+	<bean id="printStg" class = "com.proxy.strategy.impl.PrintStrategy"/>
+	
+	<bean id="ctf" class = "com.proxy.strategy.ContextSpringFactory"> 
+		<property name="stgMap">  
+      		<map>  
+		        <entry key="1" value-ref="writeStg"/>  
+		        <entry key="2" value-ref="printStg"/>   
+      		</map>  
+  		</property>  
+	</bean>
+</beans>

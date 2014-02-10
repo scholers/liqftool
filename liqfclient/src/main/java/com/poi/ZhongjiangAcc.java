@@ -12,6 +12,13 @@ public class ZhongjiangAcc {
 	String email = null;
 	String goods = null;
 	String name = null;
+	String mobile = null;
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
 	public String getName() {
 		return name;
 	}

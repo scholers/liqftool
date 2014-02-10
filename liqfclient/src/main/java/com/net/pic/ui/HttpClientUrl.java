@@ -125,7 +125,7 @@ public class HttpClientUrl {
 		// 获取cookie之后
 		if (cookiestore != null && cookiestore.getCookies()!= null 
 				&& cookiestore.getCookies().size() > 0) {
-			// 之后再建立一个Post方法请求，提交刷新简历的表单，因为提交的参数较多，所以用Post请求好了
+			// 之后再建立一个Post方法请求，提交刷新的表单，因为提交的参数较多，所以用Post请求好了
 			HttpPost method = new HttpPost(url);
 			try {
 				// 这里是要求客户端发送一个请求。直接将PostMethod请求出去。
@@ -133,15 +133,19 @@ public class HttpClientUrl {
 				HttpEntity entity = response.getEntity();
 				// 必须要对entity进行处理，否则用同一个httpClient访问其他地址时，会抛出异常。这里是读取返回的content，然后关闭流。
 				InputStream is = entity.getContent();
-				BufferedReader br = new BufferedReader(
-						new InputStreamReader(is));
-				String str = "";
+				//if(is.available() > 0) {
+					BufferedReader br = new BufferedReader(
+							new InputStreamReader(is));
+					String str = "";
+					
+					while ((str = br.readLine()) != null) {
+						strBuild.append(str);
+					}
 				
-				while ((str = br.readLine()) != null) {
-					strBuild.append(str);
-				}
+					
+					br.close();
+				//}
 				is.close();
-				br.close();
 				client.getConnectionManager().shutdown(); // 关闭这个httpclient
 			} catch (Exception ex) {
 				logger.error(ex.fillInStackTrace());
