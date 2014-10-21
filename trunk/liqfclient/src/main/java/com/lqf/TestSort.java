@@ -1,27 +1,29 @@
 package com.lqf;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 
 public class TestSort {
 
-	/**
-	 * 
-	 * getImagePath(这里用一句话描述这个方法的作用)
-	 * (这里描述这个方法适用条件 – 可选)
-	 * @param sellerId
-	 * @return
-	 * String
-	 * @since 1.0.0
-	 */
+    /**
+     * 
+     * getImagePath(这里用一句话描述这个方法的作用)
+     * (这里描述这个方法适用条件 – 可选)
+     * @param sellerId
+     * @return
+     * String
+     * @since 1.0.0
+     */
     public String getImagePath(String sellerId) {
-    	int number  = 0;
-    	int iTemp = sellerId.hashCode();
-    	if(iTemp != Integer.MIN_VALUE)
-         number = Math.abs(iTemp) % 12;
+        int number = 0;
+        int iTemp = sellerId.hashCode();
+        if (iTemp != Integer.MIN_VALUE)
+            number = Math.abs(iTemp) % 12;
 
-		return String.valueOf(number);
-	}
-    
+        return String.valueOf(number);
+    }
+
     /**
      * 增加天数
      * @param date
@@ -37,15 +39,26 @@ public class TestSort {
         calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + day);
         return calendar.getTime();
     }
-    
-    
+
     public static void testMinInteger() {
-    	int iTemp = Integer.MIN_VALUE;
-    	final int iServer = Math.abs(iTemp) % 10 + 1; 
-    	System.out.println(iServer);
+        int iTemp = Integer.MIN_VALUE;
+        final int iServer = Math.abs(iTemp) % 10 + 1;
+        System.out.println(iServer);
     }
-    
+
+    public static void testUrl(String url) {
+        try {
+            System.out.println(URLEncoder.encode(url, "utf-8"));
+        } catch (UnsupportedEncodingException e) {
+
+        }
+    }
+
     public static void main(String[] arges) {
-    	testMinInteger();
+        testUrl("https://f.alipay.com/wap/billlater/index.htm#repay/all");
+        testUrl("https://f.alipay.com/wap/billlater/index.htm#query/all");
+        //testUrl("");
+        //testUrl("");
+        //testUrl("");
     }
 }
