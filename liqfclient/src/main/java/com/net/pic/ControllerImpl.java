@@ -57,6 +57,10 @@ public class ControllerImpl implements Controller {
 
     }
 
+    public ControllerImpl() {
+
+    }
+
     public List<File> fetchImages(String pageUrl, String imgSaveDir) throws MalformedURLException,
                                                                     IOException {
         HttpClientUrl clintUrl = new HttpClientUrl(siteUrl, loginUrl, userName, password, null);
@@ -69,8 +73,8 @@ public class ControllerImpl implements Controller {
         // 并发执行
         if (linkUrls.size() <= 0) {
             // 获取该页面下面所有图片链接的地址
-            Set<String> urlStrs = urlHander.getUrls(page);
-            int threadNum = urlStrs.size();
+            Set<String> picStrs = urlHander.getUrls(page);
+            int threadNum = picStrs.size();
             if (threadNum <= 0) {
                 throw new MalformedURLException("Don't get image urls!");
 
@@ -78,12 +82,16 @@ public class ControllerImpl implements Controller {
             // 初始化countDown
             CountDownLatch threadSignal = new CountDownLatch(threadNum);
             // 创建固定长度的线程池
-            ExecutorService executor = Executors.newFixedThreadPool(10);
-            for (String tempUrl : urlStrs) { // 开threadNum个线程
-                HttpClientUrl clintUrlTemp = new HttpClientUrl(clintUrl.getCookiestore());
-                Runnable task = new TaskThread(siteUrl + tempUrl, clintUrlTemp, threadSignal,
-                    fetcher, hander, linkUrls);
-                executor.execute(task);
+            ExecutorService executor = Executors.newFixedThreadPool(3);
+            int i = 0;
+            for (String tempUrl : picStrs) { // 开threadNum个线程
+                if (tempUrl.indexOf("97ss.com") >= 0 && i < 50) {
+                    HttpClientUrl clintUrlTemp = new HttpClientUrl(clintUrl.getCookiestore());
+                    Runnable task = new TaskThread(tempUrl, clintUrlTemp, threadSignal, fetcher,
+                        hander, linkUrls);
+                    executor.execute(task);
+                    i++;
+                }
             }
             try {
                 threadSignal.await();
@@ -179,12 +187,81 @@ public class ControllerImpl implements Controller {
         return fileList;
     }
 
-    /**
-     * 
-     * @author jill
-     * 
-     */
-    public static void main(String[] args) {
+    private void get7sPic(String[] args) {
+        String siteUrl = null;
+        String loginUrl = null;
+        String password = null;
+        String userName = null;
+        String fileDir = null;
+        String testUrl = null;
+        String fileDir2 = null;
+        String fileDir3 = null;
+        String pageNum = "1";
+        if (args != null && args.length > 0) {
+            siteUrl = args[0];
+            loginUrl = args[1];
+            password = args[2];
+            userName = args[3];
+            fileDir = args[4];
+            testUrl = args[5];
+            fileDir2 = args[6];
+            fileDir3 = args[7];
+            pageNum = args[8];
+        }
+        if (siteUrl == null || siteUrl.length() <= 0) {
+            // defaule site url
+            //http://www.xfjiayuan.com/logging.php?action=login
+            siteUrl = "http://www.97ss.com/";
+        }
+        // login url
+        if (loginUrl == null || loginUrl.length() <= 0) {
+            loginUrl = "member.php?mod=logging&action=login&loginsubmit=yes&mobile=no&infloat=yes&lssubmit=yes&password=";
+        }
+        if (password == null || password.length() <= 0) {
+            password = "jacky790521";
+            loginUrl += password;
+        }
+        if (userName == null || userName.length() <= 0) {
+            userName = "scholers";
+            loginUrl = loginUrl + "&username=" + userName;
+        }
+
+        // output dir
+        if (fileDir == null || fileDir.length() <= 0) {
+            fileDir = "d://testpic//newpic//";
+        }
+        Controller controller = new ControllerImpl(siteUrl, loginUrl, userName, password);
+
+        if (testUrl == null || testUrl.length() <= 0) {
+            testUrl = siteUrl + "forum-42-" + pageNum + ".html";
+        }
+
+        // 二级解析
+        try {
+
+            // for(int i = 0; i < 9; i ++) {
+            // testUrl = siteUrl + "forum-25-" + 5 + ".html";
+            //controller.fetchImages(testUrl, fileDir);
+            //controller.fetchImages(testUrl2, fileDir);
+            controller.fetchImages(testUrl, fileDir);
+            //controller.fetchImages(testUrl4, fileDir);
+            // Thread.sleep(5000);
+            // }
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            logger.error(e.fillInStackTrace());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            logger.error(e.fillInStackTrace());
+
+        }
+        System.exit(0);
+
+        // 文件转移操作，每个文件夹只保留1000个文件
+        // FileAccess.batchMove(fileDir, fileDir + "/pic1", 1000);
+    }
+
+    private void getXfjyPic(String[] args) {
         String siteUrl = null;
         String loginUrl = null;
         String password = null;
@@ -265,6 +342,16 @@ public class ControllerImpl implements Controller {
 
         // 文件转移操作，每个文件夹只保留1000个文件
         // FileAccess.batchMove(fileDir, fileDir + "/pic1", 1000);
+    }
+
+    /**
+     * 
+     * @author jill
+     * 
+     */
+    public static void main(String[] args) {
+        ControllerImpl controller = new ControllerImpl();
+        controller.get7sPic(args);
     }
 
 }

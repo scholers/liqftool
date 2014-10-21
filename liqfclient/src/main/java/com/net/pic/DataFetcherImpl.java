@@ -13,8 +13,8 @@ import com.net.pic.ui.HttpClientUrl;
 
 public class DataFetcherImpl implements DataFetcher {
 
-    public File fecthFile(String httpUrl, String fileSavePath)
-            throws MalformedURLException, IOException {
+    public File fecthFile(String httpUrl, String fileSavePath) throws MalformedURLException,
+                                                              IOException {
 
         File file = new File(fileSavePath);
         if (!file.exists()) {
@@ -22,8 +22,7 @@ public class DataFetcherImpl implements DataFetcher {
         }
 
         // 打开输入流
-        BufferedInputStream in = new BufferedInputStream(
-                getInputStream(httpUrl));
+        BufferedInputStream in = new BufferedInputStream(getInputStream(httpUrl));
 
         // 打开输出流
         FileOutputStream out = new FileOutputStream(file);
@@ -40,9 +39,9 @@ public class DataFetcherImpl implements DataFetcher {
         return file;
     }
 
-
-    public StringBuffer fetchHtml(String httpUrl, HttpClientUrl clintUrl) throws MalformedURLException,
-            IOException {
+    public StringBuffer fetchHtml(String httpUrl, HttpClientUrl clintUrl)
+                                                                         throws MalformedURLException,
+                                                                         IOException {
         StringBuffer data = new StringBuffer();
         clintUrl.setUrl(httpUrl);
         data.append(clintUrl.parseHtml());
@@ -59,7 +58,9 @@ public class DataFetcherImpl implements DataFetcher {
         // 网页Url
         URL url = new URL(httpUrl);
         URLConnection uc = url.openConnection();
-        uc.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+        uc.setRequestProperty("User-Agent",
+            "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+        uc.setRequestProperty("Content-type", "application/x-java-serialized-object");
         return uc.getInputStream();
     }
 }
