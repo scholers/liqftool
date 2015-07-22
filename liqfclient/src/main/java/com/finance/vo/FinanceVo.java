@@ -30,6 +30,13 @@ public class FinanceVo {
 	 * 份额
 	 */
 	private double num;
+	
+	public FinanceVo (String type, String subType, String name, double print) {
+		this.type = type;
+		this.subType = subType;
+		this.name = name;
+		this.print = print;
+	}
 	/**
 	 * 当前净值
 	 */
