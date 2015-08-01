@@ -11,25 +11,35 @@ public class FinanceVo {
 
 	private String id;
 	/**
-	 * 理财大类
+	 * 
 	 */
 	private String type;
 	/**
-	 * 理财小类
+	 * 
 	 */
 	private String subType;
 	/**
-	 * 理财产品名称
+	 * 
 	 */
 	private String name;
 	/**
-	 * 本金
+	 * 
 	 */
 	private double print;
 	/**
-	 * 份额
+	 * 浠介
 	 */
 	private double num;
+	
+	private String url;
+	
+	public FinanceVo (String type, String subType, String name, double print, String url) {
+		this.type = type;
+		this.subType = subType;
+		this.name = name;
+		this.print = print;
+		this.url = url;
+	}
 	
 	public FinanceVo (String type, String subType, String name, double print) {
 		this.type = type;
@@ -38,7 +48,7 @@ public class FinanceVo {
 		this.print = print;
 	}
 	/**
-	 * 当前净值
+	 *
 	 */
 	private double curValue;
 	public String getId() {
@@ -82,6 +92,12 @@ public class FinanceVo {
 	}
 	public void setCurValue(double curValue) {
 		this.curValue = curValue;
+	}
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	
 	
