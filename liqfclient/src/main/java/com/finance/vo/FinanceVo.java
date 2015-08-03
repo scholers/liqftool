@@ -1,6 +1,7 @@
 package com.finance.vo;
 
-import java.math.BigDecimal;
+import com.finance.enums.FinanceTypeEnum;
+import com.finance.enums.SubTypeEnum;
 
 /**
  * 
@@ -13,11 +14,11 @@ public class FinanceVo {
 	/**
 	 * 
 	 */
-	private String type;
+	private FinanceTypeEnum financeTypeEnum;
 	/**
 	 * 
 	 */
-	private String subType;
+	private SubTypeEnum subTypeEnum;
 	/**
 	 * 
 	 */
@@ -33,17 +34,17 @@ public class FinanceVo {
 	
 	private String url;
 	
-	public FinanceVo (String type, String subType, String name, double print, String url) {
-		this.type = type;
-		this.subType = subType;
+	public FinanceVo (FinanceTypeEnum type, SubTypeEnum subType, String name, double print, String url) {
+		this.financeTypeEnum = type;
+		this.subTypeEnum = subType;
 		this.name = name;
 		this.print = print;
 		this.url = url;
 	}
 	
-	public FinanceVo (String type, String subType, String name, double print) {
-		this.type = type;
-		this.subType = subType;
+	public FinanceVo (FinanceTypeEnum type, SubTypeEnum subType, String name, double print) {
+		this.financeTypeEnum = type;
+		this.subTypeEnum = subType;
 		this.name = name;
 		this.print = print;
 	}
@@ -57,18 +58,23 @@ public class FinanceVo {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public String getType() {
-		return type;
+
+	public FinanceTypeEnum getFinanceTypeEnum() {
+		return financeTypeEnum;
 	}
-	public void setType(String type) {
-		this.type = type;
+
+	public void setFinanceTypeEnum(FinanceTypeEnum financeTypeEnum) {
+		this.financeTypeEnum = financeTypeEnum;
 	}
-	public String getSubType() {
-		return subType;
+
+	public SubTypeEnum getSubTypeEnum() {
+		return subTypeEnum;
 	}
-	public void setSubType(String subType) {
-		this.subType = subType;
+
+	public void setSubTypeEnum(SubTypeEnum subTypeEnum) {
+		this.subTypeEnum = subTypeEnum;
 	}
+
 	public String getName() {
 		return name;
 	}

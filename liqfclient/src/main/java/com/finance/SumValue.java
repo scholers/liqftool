@@ -1,11 +1,10 @@
 package com.finance;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
+import com.finance.enums.FinanceTypeEnum;
+import com.finance.enums.SubTypeEnum;
 import com.finance.util.MoneyUtil;
 import com.finance.vo.FinanceVo;
 import com.net.pic.ui.HttpClientUrl;
@@ -16,7 +15,7 @@ public class SumValue {
 
 	static {
 
-		FinanceVo vo = new FinanceVo("境内", "私募基金", "新方程域秀智享5号尊享B", 1010000.0, "http://simu.howbuy.com/yuxiuziben/S33873/");
+		FinanceVo vo = new FinanceVo(FinanceTypeEnum.IN, SubTypeEnum.IN, "新方程域秀智享5号尊享B", 1010000.0, "http://simu.howbuy.com/yuxiuziben/S33873/");
 		
 		vo.setNum(948766.6);
 		voList.add(vo);
@@ -45,7 +44,7 @@ public class SumValue {
 			// 获取当前的市值
 			double curMoney = MoneyUtil.multiply(finVo.getCurValue(),
 					finVo.getNum());
-			if (("境外").equals(finVo.getType())) {
+			if (finVo.getFinanceTypeEnum() == FinanceTypeEnum.OUT) {
 				curMoney = MoneyUtil.multiply(curMoney, 6.1959d);
 			}
 			// 获取盈利
