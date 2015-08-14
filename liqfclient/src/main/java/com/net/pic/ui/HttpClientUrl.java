@@ -19,6 +19,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.finance.enums.FinanceTypeEnum;
+import com.finance.enums.SubTypeEnum;
 import com.net.pic.util.RegexUtil;
 
 /**
@@ -29,8 +31,10 @@ import com.net.pic.util.RegexUtil;
 public class HttpClientUrl {
 	private static Logger logger = Logger.getLogger(HttpClientUrl.class);
 
+	private FinanceTypeEnum type;
+	private SubTypeEnum subType;
 	private String url = null;
-	// µÇÂ¼url
+	// ï¿½ï¿½Â¼url
 	private String loginUrl = null;
 	private String siteUrl = null;
 
@@ -42,9 +46,9 @@ public class HttpClientUrl {
 		this.siteUrl = siteUrl;
 	}
 
-	// ÓÃ»§Ãû³Æ
+	// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½
 	private String userName = null;
-	// ÃÜÂë
+	// ï¿½ï¿½ï¿½ï¿½
 	private String password = null;
 
 	public String getLoginUrl() {
@@ -71,7 +75,7 @@ public class HttpClientUrl {
 		this.password = password;
 	}
 
-	// ÏÈ½¨Á¢Ò»¸ö¿Í»§¶ËÊµÀý£¬½«Ä£ÄâÒ»¸öä¯ÀÀÆ÷
+	// ï¿½È½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	private DefaultHttpClient client = null;
 	private CookieStore cookiestore = null;
 
@@ -103,7 +107,7 @@ public class HttpClientUrl {
 	}
 
 	/**
-	 * ²»ÐèÒªµÇÂ½
+	 * 
 	 * 
 	 * @param siteUrl
 	 * @param loginUrl
@@ -115,6 +119,30 @@ public class HttpClientUrl {
 		this.siteUrl = siteUrl;
 		this.url = postUrl;
 		client = new DefaultHttpClient();
+	}
+
+	public HttpClientUrl(String siteUrl, FinanceTypeEnum type,
+			SubTypeEnum subType) {
+		this.siteUrl = siteUrl;
+		this.type = type;
+		this.subType = subType;
+		client = new DefaultHttpClient();
+	}
+
+	public FinanceTypeEnum getType() {
+		return type;
+	}
+
+	public void setType(FinanceTypeEnum type) {
+		this.type = type;
+	}
+
+	public SubTypeEnum getSubType() {
+		return subType;
+	}
+
+	public void setSubType(SubTypeEnum subType) {
+		this.subType = subType;
 	}
 
 	public String getUrl() {
@@ -140,21 +168,19 @@ public class HttpClientUrl {
 		}
 
 	}
-	
-	
+
 	private String parserHtmlNotLogin() throws IOException {
-		// µÇÂ¼ÇëÇó
+		// ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
 		String siteLoginUrl = getSiteUrl();
 		StringBuilder strBuild = new StringBuilder();
 		StringBuilder paramsBuilder = new StringBuilder(siteLoginUrl);
-		// ¿ªÊ¼µÇÂ¼
+		// ï¿½ï¿½Ê¼ï¿½ï¿½Â¼
 		HttpPost httpost = new HttpPost(paramsBuilder.toString());
 
 		HttpResponse response = client.execute(httpost);
-		HttpEntity entity = response.getEntity(); // »ñµÃHttpEntity
+		HttpEntity entity = response.getEntity(); // ï¿½ï¿½ï¿½HttpEntity
 		// login is ok?
 		if (response.getStatusLine().getStatusCode() == 200) {
-			System.out.println("Login form get: " + response.getStatusLine());
 
 			InputStream is = entity.getContent();
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -166,40 +192,59 @@ public class HttpClientUrl {
 			is.close();
 			br.close();
 
-			// ½«×Ö·û´®½âÎöÎªhtmlÎÄµµ
+			// ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªhtmlï¿½Äµï¿½
 			Document doc = Jsoup.parse(strBuild.toString());
-			// »ñÈ¡span±êÇ©
-			Elements es = doc.getElementsByTag("span");
-			int j = 0;
-			//<span class="fl" style="margin:0 8px"> 0.8340
-			//</span>
-			String message = null;
-			for (Iterator<Element> i = es.iterator(); i.hasNext();) {
-				Element e = i.next();
-				String spanStr = e.toString();
-				if (spanStr.indexOf("class=\"fl\" style=\"margin:0 8px\"") >= 0) {
-					j++;
-					message = e.text();
-					System.out.println("µ±Ç°¾»Öµ£º"+ message);
 			
-					break;
+			String message = null;
+			if (type == FinanceTypeEnum.IN && subType == SubTypeEnum.PRIVATE) {
+				// span
+				Elements es = doc.getElementsByTag("span");
+				int j = 0;
+				// <span class="fl" style="margin:0 8px"> 0.8340
+				// </span>
+				
+				for (Iterator<Element> i = es.iterator(); i.hasNext();) {
+					Element e = i.next();
+					String spanStr = e.toString();
+					if (spanStr.indexOf("class=\"fl\" style=\"margin:0 8px\"") >= 0) {
+						j++;
+						message = e.text();
+						System.out.println("ï¿½ï¿½Ç°ï¿½ï¿½Öµï¿½ï¿½" + message);
+
+						break;
+					}
+				}
+			} else if(type == FinanceTypeEnum.IN && subType == SubTypeEnum.PUBLIC) {
+				// span
+				Elements es = doc.getElementsByClass("cRed");
+				int j = 0;
+				// div
+				// <div class="cRed">
+				// 0.8920
+				// </div>
+				
+				for (Iterator<Element> i = es.iterator(); i.hasNext();) {
+					Element e = i.next();
+					String spanStr = e.toString();
+					if (spanStr.indexOf("<div class=\"cRed\">") >= 0) {
+						j++;
+						message = e.ownText();
+						System.out.println("fund value is" + message);
+
+						break;
+					}
 				}
 			}
-			if (j == 0) {
-				// throw new Exception("Login failed!");
-			}
-			// ±ØÐëÒª¶Ôentity½øÐÐ´¦Àí£¬·ñÔòÓÃÍ¬Ò»¸öhttpClient·ÃÎÊÆäËûµØÖ·Ê±£¬»áÅ×³öÒì³£¡£ÕâÀïÊÇÏú»Ù·µ»ØµÄcontent
+
 			if (entity != null) {
 				EntityUtils.consume(entity);
 			}
-
 			return message;
 		} else {
 			return null;
 		}
-		
-	}
 
+	}
 
 	private String parserHtmlByLogin() {
 		// not login
@@ -212,16 +257,16 @@ public class HttpClientUrl {
 			}
 		}
 		StringBuilder strBuild = new StringBuilder();
-		// »ñÈ¡cookieÖ®ºó
+		// ï¿½ï¿½È¡cookieÖ®ï¿½ï¿½
 		if (cookiestore != null && cookiestore.getCookies() != null
 				&& cookiestore.getCookies().size() > 0) {
-			// Ö®ºóÔÙ½¨Á¢Ò»¸öPost·½·¨ÇëÇó£¬Ìá½»Ë¢ÐÂµÄ±íµ¥£¬ÒòÎªÌá½»µÄ²ÎÊý½Ï¶à£¬ËùÒÔÓÃPostÇëÇóºÃÁË
+			// Ö®ï¿½ï¿½ï¿½Ù½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Postï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½á½»Ë¢ï¿½ÂµÄ±ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½á½»ï¿½Ä²ï¿½ï¿½ï¿½ï¿½Ï¶à£¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Postï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			HttpGet method = new HttpGet(url);
 			try {
-				// ÕâÀïÊÇÒªÇó¿Í»§¶Ë·¢ËÍÒ»¸öÇëÇó¡£Ö±½Ó½«PostMethodÇëÇó³öÈ¥¡£
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½Í»ï¿½ï¿½Ë·ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½Ó½ï¿½PostMethodï¿½ï¿½ï¿½ï¿½ï¿½È¥ï¿½ï¿½
 				HttpResponse response = client.execute(method);
 				HttpEntity entity = response.getEntity();
-				// ±ØÐëÒª¶Ôentity½øÐÐ´¦Àí£¬·ñÔòÓÃÍ¬Ò»¸öhttpClient·ÃÎÊÆäËûµØÖ·Ê±£¬»áÅ×³öÒì³£¡£ÕâÀïÊÇ¶ÁÈ¡·µ»ØµÄcontent£¬È»ºó¹Ø±ÕÁ÷¡£
+				// ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½entityï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬Ò»ï¿½ï¿½httpClientï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·Ê±ï¿½ï¿½ï¿½ï¿½ï¿½×³ï¿½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¶ï¿½È¡ï¿½ï¿½ï¿½Øµï¿½contentï¿½ï¿½È»ï¿½ï¿½Ø±ï¿½ï¿½ï¿½ï¿½ï¿½
 				InputStream is = entity.getContent();
 				BufferedReader br = new BufferedReader(new InputStreamReader(
 						is, "utf-8"));
@@ -231,7 +276,7 @@ public class HttpClientUrl {
 				}
 				br.close();
 				is.close();
-				client.getConnectionManager().shutdown(); // ¹Ø±ÕÕâ¸öhttpclient
+				client.getConnectionManager().shutdown(); // ï¿½Ø±ï¿½ï¿½ï¿½ï¿½httpclient
 			} catch (Exception ex) {
 				logger.error(ex.fillInStackTrace());
 			}
@@ -240,7 +285,7 @@ public class HttpClientUrl {
 	}
 
 	/**
-	 * µÇÂ¼ÑéÖ¤£¬²¢ÇÒ¹¹Ôìcookie
+	 * ï¿½ï¿½Â¼ï¿½ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½Ò¹ï¿½ï¿½ï¿½cookie
 	 * 
 	 * @param name
 	 * @param password
@@ -249,16 +294,16 @@ public class HttpClientUrl {
 	 * @throws Exception
 	 */
 	private CookieStore login() throws Exception {
-		System.out.println("Ê¹ÓÃÂí¼×[" + getUserName() + "]µÇÂ¼");
-		// µÇÂ¼ÇëÇó
+		System.out.println("Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½[" + getUserName() + "]ï¿½ï¿½Â¼");
+		// ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½
 		String siteLoginUrl = getSiteUrl() + getLoginUrl();
 		StringBuilder strBuild = new StringBuilder();
 		/*
-		 * // µÃµ½login formhash HttpGet httpget = new HttpGet(siteLoginUrl);
+		 * // ï¿½Ãµï¿½login formhash HttpGet httpget = new HttpGet(siteLoginUrl);
 		 * HttpResponse response = client.execute(httpget); HttpEntity entity =
 		 * response.getEntity();
 		 * 
-		 * // Êä³öÒ³ÃæÄÚÈÝ if (entity != null) { // String charset =
+		 * // ï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ if (entity != null) { // String charset =
 		 * EntityUtils.getContentCharSet(entity); InputStream is =
 		 * entity.getContent();
 		 * 
@@ -266,9 +311,10 @@ public class HttpClientUrl {
 		 * String line = null; while ((line = br.readLine()) != null) {
 		 * strBuild.append(line); } is.close(); } int pos =
 		 * strBuild.indexOf("name=\"formhash\" value="); if (pos < 0) { throw
-		 * new Exception("Get formhash failed!!!"); } // ÕÒ³öÕâ¸ö formhash
-		 * µÄÄÚÈÝ£¬ÕâÊÇµÇÂ¼ÓÃµÄ formhash String loginFormhash = strBuild.substring(pos +
-		 * 23, pos + 23 + 8); System.out.println(loginFormhash);
+		 * new Exception("Get formhash failed!!!"); } // ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ formhash
+		 * ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½ï¿½ï¿½ï¿½Çµï¿½Â¼ï¿½Ãµï¿½ formhash String loginFormhash =
+		 * strBuild.substring(pos + 23, pos + 23 + 8);
+		 * System.out.println(loginFormhash);
 		 */
 		// create login parames
 		StringBuilder paramsBuilder = new StringBuilder(siteLoginUrl);
@@ -276,11 +322,11 @@ public class HttpClientUrl {
 				.append("&username=").append(getUserName())
 				.append("&password=").append(getPassword());
 		// .append("&formhash=").append(loginFormhash);
-		// ¿ªÊ¼µÇÂ¼
+		// ï¿½ï¿½Ê¼ï¿½ï¿½Â¼
 		HttpPost httpost = new HttpPost(paramsBuilder.toString());
 
 		HttpResponse response = client.execute(httpost);
-		HttpEntity entity = response.getEntity(); // »ñµÃHttpEntity
+		HttpEntity entity = response.getEntity(); // ï¿½ï¿½ï¿½HttpEntity
 		// login is ok?
 		if (response.getStatusLine().getStatusCode() == 200) {
 			System.out.println("Login form get: " + response.getStatusLine());
@@ -295,13 +341,13 @@ public class HttpClientUrl {
 			is.close();
 			br.close();
 
-			// ½«×Ö·û´®½âÎöÎªhtmlÎÄµµ
+			// ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îªhtmlï¿½Äµï¿½
 			Document doc = Jsoup.parse(strBuild.toString());
 
-			// »ñÈ¡img±êÇ©
+			// ï¿½ï¿½È¡imgï¿½ï¿½Ç©
 			Elements es = doc.getElementsByTag("div");
 			int j = 0;
-			// »ñÈ¡Ã»Ò»¸öimg±êÇ©srcµÄÄÚÈÝ£¬Ò²¾ÍÊÇÍ¼Æ¬µØÖ·
+			// ï¿½ï¿½È¡Ã»Ò»ï¿½ï¿½imgï¿½ï¿½Ç©srcï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½Ò²ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½Ö·
 			for (Iterator<Element> i = es.iterator(); i.hasNext();) {
 				Element e = i.next();
 				String r = e.attr("class");
@@ -320,7 +366,7 @@ public class HttpClientUrl {
 			if (j == 0) {
 				// throw new Exception("Login failed!");
 			}
-			// ±ØÐëÒª¶Ôentity½øÐÐ´¦Àí£¬·ñÔòÓÃÍ¬Ò»¸öhttpClient·ÃÎÊÆäËûµØÖ·Ê±£¬»áÅ×³öÒì³£¡£ÕâÀïÊÇÏú»Ù·µ»ØµÄcontent
+			// ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½entityï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬Ò»ï¿½ï¿½httpClientï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·Ê±ï¿½ï¿½ï¿½ï¿½ï¿½×³ï¿½ï¿½ì³£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù·ï¿½ï¿½Øµï¿½content
 			if (entity != null) {
 				EntityUtils.consume(entity);
 			}

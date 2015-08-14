@@ -1,7 +1,7 @@
 package com.finance.enums;
 
 public enum SubTypeEnum {
-	IN("私募基金", 1), OUT("公募基金", 2);
+	PRIVATE("私募基金", 1), PUBLIC("公募基金", 2);
 	// 成员变量
 	private String name;
 	private int index;
