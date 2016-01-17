@@ -14,10 +14,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
-import org.junit.Test;
+//import org.junit.Test;
 
 /**
- * ·­Òë±È¶Ô
+ * ï¿½ï¿½ï¿½ï¿½È¶ï¿½
  * 
  * @author weique.lqf
  * 
@@ -26,12 +26,12 @@ public class ReplaceKey {
 
 	public  void replaceAllKey(String filePath, String targetFilePath,
 			String writeFilePath) {
-		// ÖÐÎÄ½âÊÍ
+		// ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½
 		CommParseInerface xmlSource = new XmlParse(targetFilePath);
 		CommParseInerface wordSource = new WordParse(filePath);
-		// ÖÐÎÄ½âÊÍ
+		// ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½
 		Map<String, String> sourceKey = wordSource.parseDate();
-		// Ó¢ÎÄÔ­°æ
+		// Ó¢ï¿½ï¿½Ô­ï¿½ï¿½
 		Map<String, String> tempMap = xmlSource.parseDate();
 
 		StringBuilder oldReplaceStr = new StringBuilder();
@@ -57,20 +57,20 @@ public class ReplaceKey {
 		}
 
 		String strTemp = oldReplaceStr.toString();
-		// ¹Ø¼ü´ÊÆ¥Åä
+		// ï¿½Ø¼ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½
 		for (Map.Entry<String, String> temp : tempMap.entrySet()) {
 			for (Map.Entry<String, String> sourceTemp : sourceKey.entrySet()) {
-				// Æ¥ÅäÉÏÁË£¬¾ÍÌæ»»
+				// Æ¥ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½ï¿½æ»»
 				if (sourceTemp.getKey().indexOf(temp.getKey()) >= 0) {
 					String tempStr = temp.getValue() + "<p>"
 							+ sourceTemp.getValue() + "</p>";
-					// Ö´ÐÐÌæ»»²Ù×÷
+					// Ö´ï¿½ï¿½ï¿½æ»»ï¿½ï¿½ï¿½ï¿½
 					strTemp = replaceLongStr(strTemp, temp.getValue(), tempStr);
 				}
 			}
 
 		}
-		// Êä³öÐÂµÄxmlÎÄ¼þ
+		// ï¿½ï¿½ï¿½ï¿½Âµï¿½xmlï¿½Ä¼ï¿½
 		try {
 			FileWriter fw = new FileWriter(writeFilePath);
 			fw.write(strTemp);
@@ -82,14 +82,14 @@ public class ReplaceKey {
 
 	}
 
-	// ²¢·¢
+	// ï¿½ï¿½ï¿½ï¿½
 	public  void replaceAllKeyCur(String filePath, String targetFilePath,
 			String writeFilePath) {
-		// ÖÐÎÄ½âÊÍ
+		// ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½
 		CommParseInerface temp1 = new XmlParse(targetFilePath);
 		CommParseInerface temp2 = new WordParse(filePath);
 		Map<String, String> sourceKey = temp1.parseDate();
-		// Ó¢ÎÄÔ­°æ
+		// Ó¢ï¿½ï¿½Ô­ï¿½ï¿½
 		Map<String, String> tempMap = temp2.parseDate();
 
 		StringBuilder oldReplaceStr = new StringBuilder();
@@ -115,21 +115,21 @@ public class ReplaceKey {
 		}
 
 		String strTemp = oldReplaceStr.toString();
-		// ¹Ø¼ü´ÊÆ¥Åä
+		// ï¿½Ø¼ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½
 		for (Map.Entry<String, String> temp : tempMap.entrySet()) {
 			for (Map.Entry<String, String> sourceTemp : sourceKey.entrySet()) {
-				// Æ¥ÅäÉÏÁË£¬¾ÍÌæ»»
+				// Æ¥ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½ï¿½æ»»
 				if (sourceTemp.getKey().indexOf(temp.getKey()) >= 0) {
 					String tempStr = temp.getValue() + "<p>"
 							+ sourceTemp.getValue() + "</p>";
 					// System.out.println("tempStr==" + tempStr);
-					// Ö´ÐÐÌæ»»²Ù×÷
+					// Ö´ï¿½ï¿½ï¿½æ»»ï¿½ï¿½ï¿½ï¿½
 					strTemp = replaceLongStr(strTemp, temp.getValue(), tempStr);
 				}
 			}
 
 		}
-		// Êä³öÐÂµÄxmlÎÄ¼þ
+		// ï¿½ï¿½ï¿½ï¿½Âµï¿½xmlï¿½Ä¼ï¿½
 		try {
 			FileWriter fw = new FileWriter(writeFilePath);
 			fw.write(strTemp);
@@ -142,11 +142,11 @@ public class ReplaceKey {
 	}
 
 	/**
-	 * ²âÊÔº¯Êý
+	 * ï¿½ï¿½ï¿½Ôºï¿½ï¿½ï¿½
 	 * 
 	 * @throws InterruptedException
 	 */
-	@Test
+	//@Test
 	public void mutiThreadRaplace(String filePath, String targetFilePath,
 			String writeFilePath) throws InterruptedException {
 		
@@ -154,24 +154,24 @@ public class ReplaceKey {
 		CommParseInerface temp2 = new XmlParse(targetFilePath);
 
 		List<FutureTask<Map<String, String>>> list = new ArrayList<FutureTask<Map<String, String>>>();
-		// ´´½¨Ïß³Ì³Ø£¬Ïß³Ì³ØµÄ´óÐ¡ºÍList.sizeÃ»ÓÐÉ¶±ØÈ»µÄ¹ØÏµ£¬Ò»°ãµÄÔ­ÔòÊÇ<=list.size,¶à³öÀ´ÀË·Ñ²»ºÃ
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ì³Ø£ï¿½ï¿½ß³Ì³ØµÄ´ï¿½Ð¡ï¿½ï¿½List.sizeÃ»ï¿½ï¿½É¶ï¿½ï¿½È»ï¿½Ä¹ï¿½Ïµï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½<=list.size,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë·Ñ²ï¿½ï¿½ï¿½
 		ExecutorService exec = Executors.newFixedThreadPool(2);
 		// for (int i = 10; i < 20; i++) {
-		// ´´½¨¶ÔÏó
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		FutureTask<Map<String, String>> ft = new FutureTask<Map<String, String>>(
 				new CountResult(temp1));
-		// Ìí¼Óµ½list,·½±ãºóÃæÈ¡µÃ½á¹û
+		// ï¿½ï¿½Óµï¿½list,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½Ã½ï¿½ï¿½
 		list.add(ft);
-		// Ò»¸ö¸öÌá½»¸øÏß³Ì³Ø£¬µ±È»Ò²¿ÉÒÔÒ»´ÎÐÔµÄÌá½»¸øÏß³Ì³Ø£¬exec.invokeAll(list);
+		// Ò»ï¿½ï¿½ï¿½ï¿½ï¿½á½»ï¿½ï¿½ï¿½ß³Ì³Ø£ï¿½ï¿½ï¿½È»Ò²ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ôµï¿½ï¿½á½»ï¿½ï¿½ï¿½ß³Ì³Ø£ï¿½exec.invokeAll(list);
 		exec.submit(ft);
 		// }
 		FutureTask<Map<String, String>> ft2 = new FutureTask<Map<String, String>>(
 				new CountResult(temp2));
-		// Ìí¼Óµ½list,·½±ãºóÃæÈ¡µÃ½á¹û
+		// ï¿½ï¿½Óµï¿½list,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½Ã½ï¿½ï¿½
 		list.add(ft2);
-		// Ò»¸ö¸öÌá½»¸øÏß³Ì³Ø£¬µ±È»Ò²¿ÉÒÔÒ»´ÎÐÔµÄÌá½»¸øÏß³Ì³Ø£¬exec.invokeAll(list);
+		// Ò»ï¿½ï¿½ï¿½ï¿½ï¿½á½»ï¿½ï¿½ï¿½ß³Ì³Ø£ï¿½ï¿½ï¿½È»Ò²ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ôµï¿½ï¿½á½»ï¿½ï¿½ï¿½ß³Ì³Ø£ï¿½exec.invokeAll(list);
 		exec.submit(ft2);
-		// ¿ªÊ¼Í³¼Æ½á¹û
+		// ï¿½ï¿½Ê¼Í³ï¿½Æ½ï¿½ï¿½
 		Map<String, String> sourceKey = null;
 		try {
 			sourceKey = list.get(0).get();
@@ -187,7 +187,7 @@ public class ReplaceKey {
 			e2.printStackTrace();
 		}
 
-		// ´¦ÀíÍê±Ï£¬Ò»¶¨Òª¼Ç×¡¹Ø±ÕÏß³Ì³Ø£¬Õâ¸ö²»ÄÜÔÚÍ³¼ÆÖ®Ç°¹Ø±Õ£¬ÒòÎªÈç¹ûÏß³Ì¶àµÄ»°,Ö´ÐÐÖÐµÄ¿ÉÄÜ±»´ò¶Ï
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï£ï¿½Ò»ï¿½ï¿½Òªï¿½ï¿½×¡ï¿½Ø±ï¿½ï¿½ß³Ì³Ø£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½Ö®Ç°ï¿½Ø±Õ£ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ß³Ì¶ï¿½Ä»ï¿½,Ö´ï¿½ï¿½ï¿½ÐµÄ¿ï¿½ï¿½Ü±ï¿½ï¿½ï¿½ï¿½
 		exec.shutdown();
 
 		StringBuilder oldReplaceStr = new StringBuilder();
@@ -213,19 +213,19 @@ public class ReplaceKey {
 		}
 
 		String strTemp = oldReplaceStr.toString();
-		// ¹Ø¼ü´ÊÆ¥Åä
+		// ï¿½Ø¼ï¿½ï¿½ï¿½Æ¥ï¿½ï¿½
 		for (Map.Entry<String, String> temp : tempMap.entrySet()) {
 			for (Map.Entry<String, String> sourceTemp : sourceKey.entrySet()) {
-				// Æ¥ÅäÉÏÁË£¬¾ÍÌæ»»
+				// Æ¥ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½ï¿½æ»»
 				if (sourceTemp.getKey().indexOf(temp.getKey()) >= 0) {
 					String tempStr = temp.getValue() + "<p>"
 							+ sourceTemp.getValue() + "</p>";
-					// Ö´ÐÐÌæ»»²Ù×÷
+					// Ö´ï¿½ï¿½ï¿½æ»»ï¿½ï¿½ï¿½ï¿½
 					strTemp = replaceLongStr(strTemp, temp.getValue(), tempStr);
 				}
 			}
 		}
-		// Êä³öÐÂµÄxmlÎÄ¼þ
+		// ï¿½ï¿½ï¿½ï¿½Âµï¿½xmlï¿½Ä¼ï¿½
 		try {
 			FileWriter fw = new FileWriter(writeFilePath);
 			fw.write(strTemp);
@@ -238,7 +238,7 @@ public class ReplaceKey {
 	}
 
 	/**
-	 * ·Ö²¼¼ÆËã
+	 * ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½
 	 * 
 	 * @author Administrator
 	 * 
@@ -260,7 +260,7 @@ public class ReplaceKey {
 	}
 
 	/**
-	 * ÎÄ±¾Ìæ»»
+	 * ï¿½Ä±ï¿½ï¿½æ»»
 	 * 
 	 * @param str
 	 * @param fromStr
@@ -272,7 +272,7 @@ public class ReplaceKey {
 		if (str != null && !str.equals("")) {
 			if (str.indexOf(fromStr) >= 0) {
 				result.append(str.substring(0, str.indexOf(fromStr)));
-				//×·¼ÓÖÐÓ¢ÎÄµÄ½âÎö
+				//×·ï¿½ï¿½ï¿½ï¿½Ó¢ï¿½ÄµÄ½ï¿½ï¿½ï¿½
 				result.append(toStr.trim());
 				String tempEndStr = str.substring(str.indexOf(fromStr) + fromStr.length(),
 						str.length());
@@ -290,9 +290,9 @@ public class ReplaceKey {
 	 * @throws InterruptedException
 	 */
 	public static void main(String[] args) throws InterruptedException {
-		String filePath = "d:\\¿ìÅÌ\\work\\FindBugs\\FindBugs¹æÔòÕûÀí_ÖÐÎÄ°æ.doc";
-		String targetFilePath = "d:\\¿ìÅÌ\\work\\FindBugs\\messages.xml";
-		String writeFilePath = "d:\\¿ìÅÌ\\work\\FindBugs\\messages2.xml";
+		String filePath = "d:\\ï¿½ï¿½ï¿½ï¿½\\work\\FindBugs\\FindBugsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½Ä°ï¿½.doc";
+		String targetFilePath = "d:\\ï¿½ï¿½ï¿½ï¿½\\work\\FindBugs\\messages.xml";
+		String writeFilePath = "d:\\ï¿½ï¿½ï¿½ï¿½\\work\\FindBugs\\messages2.xml";
 		// replaceAllKey(filePath, targetFilePath, writeFilePath);
 		ReplaceKey replaceKey = new ReplaceKey();
 		replaceKey.mutiThreadRaplace(filePath, targetFilePath, writeFilePath);

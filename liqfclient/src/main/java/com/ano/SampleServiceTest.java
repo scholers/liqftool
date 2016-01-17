@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.junit.Test;
+//import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -18,6 +18,7 @@ import com.cache.TestServiceImpl;
 public class SampleServiceTest{
 	@Resource
 	private SampleServiceImpl sampleService = new SampleServiceImpl(new String());
+	/*
 	@Test
 	public void testCacheTest(){     
 		
@@ -41,6 +42,6 @@ public class SampleServiceTest{
 		for(String str:cachelist1){
 			System.out.println(str);
 		}		
-	}
+	}*/
 }
  
