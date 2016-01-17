@@ -116,10 +116,10 @@ public class SumValue {
 			double getMoney = MoneyUtil.subtract(curMoney, finVo.getPrint());
 			// 获取总市值
 			allValue = MoneyUtil.add(curMoney, allValue);
-			System.out.println("curMoney==" + curMoney);
+
 			// 获取总盈利
 			getValue = MoneyUtil.add(getMoney, getValue);
-			System.out.println("getMoney==" + getMoney);
+			System.out.println("fund name:" + finVo.getName() + ",curMoney:" + curMoney + ",getMoney:" + getMoney);
 		}
 
 		System.out.println("总市值==" + MoneyUtil.getRealMoney(allValue));

@@ -2,7 +2,7 @@ package com.finance.vo;
 
 import com.finance.enums.FinanceTypeEnum;
 import com.finance.enums.SubTypeEnum;
-
+import com.finance.enums.FinanceStatusEnum;
 /**
  * 
  * @author weique
@@ -12,15 +12,20 @@ public class FinanceVo {
 
 	private String id;
 	/**
-	 * 
+	 * 投资大类
 	 */
 	private FinanceTypeEnum financeTypeEnum;
 	/**
-	 * 
+	 * 投资小类
 	 */
 	private SubTypeEnum subTypeEnum;
+
 	/**
-	 * 
+	 * 投资状态
+	 */
+	private FinanceStatusEnum financeStatusEnum = FinanceStatusEnum.START;
+	/**
+	 * 投资名称
 	 */
 	private String name;
 	/**
@@ -28,9 +33,14 @@ public class FinanceVo {
 	 */
 	private double print;
 	/**
-	 * 浠介
+	 * 数量
 	 */
 	private double num;
+
+	/**
+	 * 最终受益
+	 */
+	private double endValue;
 	
 	private String url;
 	
@@ -105,6 +115,20 @@ public class FinanceVo {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
-	
+
+	public FinanceStatusEnum getFinanceStatusEnum() {
+		return financeStatusEnum;
+	}
+
+	public void setFinanceStatusEnum(FinanceStatusEnum financeStatusEnum) {
+		this.financeStatusEnum = financeStatusEnum;
+	}
+
+	public double getEndValue() {
+		return endValue;
+	}
+
+	public void setEndValue(double endValue) {
+		this.endValue = endValue;
+	}
 }
