@@ -3,6 +3,7 @@ package com.finance;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.finance.enums.FinanceStatusEnum;
 import com.finance.enums.FinanceTypeEnum;
 import com.finance.enums.SubTypeEnum;
 import com.finance.util.MoneyUtil;
@@ -40,6 +41,8 @@ public class SumValue {
 				"http://www.howbuy.com/fund/519983/index.htm?source=aladdin&HTAG=0.0040010007900000");
 
 		vo.setNum(37193.12);
+		vo.setEndValue(7359.81);
+		vo.setFinanceStatusEnum(FinanceStatusEnum.END);
 		voList.add(vo);
 		
 		vo = new FinanceVo(
@@ -50,6 +53,8 @@ public class SumValue {
 				"http://www.howbuy.com/fund/000663/index.htm?source=aladdin&HTAG=0.0040010007900000");
 
 		vo.setNum(24752.48);
+		vo.setFinanceStatusEnum(FinanceStatusEnum.END);
+		vo.setEndValue(3665.57);
 		voList.add(vo);
 		
 		vo = new FinanceVo(
@@ -111,6 +116,10 @@ public class SumValue {
 					finVo.getNum());
 			if (finVo.getFinanceTypeEnum() == FinanceTypeEnum.OUT) {
 				curMoney = MoneyUtil.multiply(curMoney, 6.1959d);
+			}
+			if(finVo.getFinanceStatusEnum() == FinanceStatusEnum.END){
+				curMoney = finVo.getEndValue();
+				finVo.setPrint(0.0);
 			}
 			// 获取盈利
 			double getMoney = MoneyUtil.subtract(curMoney, finVo.getPrint());
