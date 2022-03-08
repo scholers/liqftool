@@ -161,7 +161,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 			<dependency>
 				<groupId>org.apache.poi</groupId>
 				<artifactId>poi-scratchpad</artifactId>
-				<version>3.6</version>
+				<version>5.2.1</version>
 			</dependency>
 
 			<dependency>
